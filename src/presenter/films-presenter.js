@@ -1,4 +1,3 @@
-import FilmsSectionView from '../view/films-section-view.js';
 import FilmsContainerView from '../view/films-container-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmCardView from '../view/film-card-view';
@@ -13,19 +12,16 @@ export default class FilmsPresenter {
   }
 
   init() {
-    this.filmsSectionComponent = new FilmsSectionView();
     this.filmsContainerComponent = new FilmsContainerView();
     this.filmsListComponent = new FilmsListView();
     this.showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(this.filmsContainerComponent, this.filmsSectionComponent.getElement());
+    render(this.filmsContainerComponent, this.parentElement);
     render(this.filmsListComponent, this.filmsContainerComponent.getElement());
     render(this.showMoreButtonComponent, this.filmsContainerComponent.getElement());
 
     for (let i = 0; i < FILMS_COUNT; i++) {
       render(new FilmCardView(), this.filmsListComponent.getElement());
     }
-
-    render(this.filmsSectionComponent, this.parentElement);
   }
 }

@@ -1,5 +1,5 @@
 import HeaderPresenter from './presenter/header-presenter.js';
-import FilmsPresenter from './presenter/films-presenter.js';
+import MainScreenPresenter from './presenter/main-screen-presenter.js';
 import {ElementSelector} from './data/constants.js';
 
 const headerPresenter = new HeaderPresenter({
@@ -7,7 +7,7 @@ const headerPresenter = new HeaderPresenter({
 });
 headerPresenter.init();
 
-const filmsPresenter = new FilmsPresenter({
-  parentElement: document.querySelector(ElementSelector.ContentPlace)
+const mainScreenPresenter = new MainScreenPresenter({
+  parentElement: document.querySelector(ElementSelector.MainScreen)
 });
-filmsPresenter.init();
+mainScreenPresenter.init();
