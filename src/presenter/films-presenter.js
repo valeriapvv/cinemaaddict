@@ -1,10 +1,13 @@
-import FilmsContainerView from '../view/films-container-view.js';
+import FilmsBlockView from '../view/films-block-view/films-block-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmCardView from '../view/film-card-view';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
+import TopRatedFilmsBlockView from '../view/films-block-view/top-rated-films-block-view.js';
+import CommentedFilmsBlockView from '../view/films-block-view/commented-films-block-view.js';
 import {render} from '../render.js';
 
-const FILMS_COUNT = 5;
+const MAIN_FILMS_COUNT = 5;
+const SECONDARY_FILMS_COUNT = 2;
 
 export default class FilmsPresenter {
   constructor({parentElement}) {
@@ -12,16 +15,41 @@ export default class FilmsPresenter {
   }
 
   init() {
-    this.filmsContainerComponent = new FilmsContainerView();
-    this.filmsListComponent = new FilmsListView();
-    this.showMoreButtonComponent = new ShowMoreButtonView();
+    this.renderBlock({
+      blockComponent: new FilmsBlockView(),
+      itemsCount: MAIN_FILMS_COUNT,
+    });
 
-    render(this.filmsContainerComponent, this.parentElement);
-    render(this.filmsListComponent, this.filmsContainerComponent.getElement());
-    render(this.showMoreButtonComponent, this.filmsContainerComponent.getElement());
+    this.renderBlock({
+      blockComponent: new TopRatedFilmsBlockView(),
+      itemsCount: SECONDARY_FILMS_COUNT,
+      hasShowMoreButton: false,
+    });
 
-    for (let i = 0; i < FILMS_COUNT; i++) {
-      render(new FilmCardView(), this.filmsListComponent.getElement());
+    this.renderBlock({
+      blockComponent: new CommentedFilmsBlockView(),
+      itemsCount: SECONDARY_FILMS_COUNT,
+      hasShowMoreButton: false,
+    });
+  }
+
+  renderBlock({
+    blockComponent,
+    itemsCount,
+    hasShowMoreButton = true,
+  }) {
+    const blockElement = blockComponent.getElement();
+    const filmsListComponent = new FilmsListView();
+
+    render(blockComponent, this.parentElement);
+    render(filmsListComponent, blockElement);
+
+    if (hasShowMoreButton) {
+      render(new ShowMoreButtonView(), blockElement);
+    }
+
+    for (let i = 0; i < itemsCount; i++) {
+      render(new FilmCardView(), filmsListComponent.getElement());
     }
   }
 }
