@@ -1,6 +1,6 @@
 import FilmsBlockView from '../view/films-block-view/films-block-view.js';
 import FilmsListView from '../view/films-list-view.js';
-import FilmCardView from '../view/film-card-view';
+import FilmCardView from '../view/film-card-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import TopRatedFilmsBlockView from '../view/films-block-view/top-rated-films-block-view.js';
 import CommentedFilmsBlockView from '../view/films-block-view/commented-films-block-view.js';
