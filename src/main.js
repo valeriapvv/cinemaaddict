@@ -1,5 +1,6 @@
 import HeaderPresenter from './presenter/header-presenter.js';
 import MainScreenPresenter from './presenter/main-screen-presenter.js';
+import FilmsCountPresenter from './presenter/films-count-presenter.js';
 import {ElementSelector} from './data/constants.js';
 
 const headerPresenter = new HeaderPresenter({
@@ -11,3 +12,8 @@ const mainScreenPresenter = new MainScreenPresenter({
   parentElement: document.querySelector(ElementSelector.MainScreen)
 });
 mainScreenPresenter.init();
+
+const filmsCountPresenter = new FilmsCountPresenter({
+  parentElement: document.querySelector(ElementSelector.FooterInfo)
+});
+filmsCountPresenter.init();
