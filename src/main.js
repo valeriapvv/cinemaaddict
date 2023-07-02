@@ -3,6 +3,11 @@ import MainScreenPresenter from './presenter/main-screen-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter.js';
 import PopupPresesnter from './presenter/popup-presenter.js';
 import {ElementSelector} from './data/constants.js';
+import {generateFilm} from './mock/film.js';
+import {FILMS_COUNT} from './mock/constants.js';
+
+// eslint-disable-next-line no-console
+console.log(Array.from({length: FILMS_COUNT}, generateFilm));
 
 const rootElement = document.body;
 
