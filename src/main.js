@@ -1,19 +1,17 @@
+import FilmsModel from './model/films-model.js';
+import CommentsModel from './model/comments-model.js';
 import HeaderPresenter from './presenter/header-presenter.js';
 import MainScreenPresenter from './presenter/main-screen-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter.js';
 import PopupPresesnter from './presenter/popup-presenter.js';
 import {ElementSelector} from './data/constants.js';
-import {generateFilm} from './mock/film.js';
-import {generateComment} from './mock/comment.js';
-import {COMMENTS_COUNT, FILMS_COUNT} from './mock/constants.js';
-
-// eslint-disable-next-line no-console
-console.log(Array.from({length: COMMENTS_COUNT}, generateComment));
-
-// eslint-disable-next-line no-console
-console.log(Array.from({length: FILMS_COUNT}, generateFilm));
 
 const rootElement = document.body;
+
+/* eslint-disable no-unused-vars */
+const filmsModel = new FilmsModel();
+const commentsModel = new CommentsModel();
+/* eslint-enable no-unused-vars */
 
 const headerPresenter = new HeaderPresenter({
   parentElement: document.querySelector(ElementSelector.Header)
