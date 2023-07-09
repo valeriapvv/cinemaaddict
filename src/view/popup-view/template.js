@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
-import AbstractView from '../framework/abstract-view.js';
-import {formatMinutes} from '../utils.js';
-import {EMOTIONS} from '../data/constants.js';
+import {formatMinutes} from '../../utils.js';
+import {EMOTIONS} from '../../data/constants.js';
 
 const getPosterTemplate = ({poster, ageRating}) => (`
     <div class="film-details__poster">
@@ -179,7 +178,7 @@ const getNewCommentBlockTemplate = () => (`
     </div>
  `);
 
-const getPopupTemplate = (film, comments) => {
+export const getPopupTemplate = (film, comments) => {
   const {description} = film.filmInfo;
 
   const commentsCount = film.comments.length;
@@ -225,15 +224,3 @@ const getPopupTemplate = (film, comments) => {
     </section>
   `);
 };
-
-export default class PopupView extends AbstractView {
-  constructor(film, comments) {
-    super();
-    this.film = film;
-    this.comments = comments;
-  }
-
-  getTemplate() {
-    return getPopupTemplate(this.film, this.comments);
-  }
-}

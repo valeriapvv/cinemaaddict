@@ -1,4 +1,4 @@
-import PopupView from '../view/popup-view.js';
+import PopupView from '../view/popup-view/popup-view.js';
 import {render} from '../render.js';
 
 export default class PopupPresesnter {
