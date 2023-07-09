@@ -8,10 +8,8 @@ import {ElementSelector} from './data/constants.js';
 
 const rootElement = document.body;
 
-/* eslint-disable no-unused-vars */
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
-/* eslint-enable no-unused-vars */
 
 const headerPresenter = new HeaderPresenter({
   parentElement: document.querySelector(ElementSelector.Header)
@@ -30,14 +28,14 @@ const filmsCountPresenter = new FilmsCountPresenter({
 });
 filmsCountPresenter.init();
 
-const showPopup = () => {
+const onShowPopup = () => {
   rootElement.classList.add('hide-overflow');
 };
 
-/* eslint-disable no-unused-vars */
 const popupPresenter = new PopupPresesnter({
   parentElement: rootElement,
-  showPopup,
+  filmsModel,
+  commentsModel,
+  onShowPopup,
 });
-/* eslint-enable no-unused-vars */
-// popupPresenter.init();
+popupPresenter.init();
