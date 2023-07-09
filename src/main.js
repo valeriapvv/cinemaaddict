@@ -25,7 +25,8 @@ const mainScreenPresenter = new MainScreenPresenter({
 mainScreenPresenter.init();
 
 const filmsCountPresenter = new FilmsCountPresenter({
-  parentElement: document.querySelector(ElementSelector.FooterInfo)
+  parentElement: document.querySelector(ElementSelector.FooterInfo),
+  filmsModel,
 });
 filmsCountPresenter.init();
 

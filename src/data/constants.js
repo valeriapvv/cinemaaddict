@@ -6,6 +6,4 @@ export const ElementSelector = {
 
 export const FILMS_BLOCK_SECONDARY_CLASS_NAME = 'films-list--extra';
 
-export const TOTAL_FILMS_COUNT = 1234;
-
 export const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
