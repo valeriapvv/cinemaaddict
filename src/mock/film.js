@@ -39,7 +39,7 @@ const generateRating = () => number.float({
   precision: FILM_RATING_PRECISION,
 });
 
-const generatePoster = () => image.urlPicsumPhotos({
+const generatePoster = () => image.urlLoremFlickr({
   width: PosterSize.Width,
   height: PosterSize.Height,
 });

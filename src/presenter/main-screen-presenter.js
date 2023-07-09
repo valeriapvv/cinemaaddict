@@ -5,8 +5,12 @@ import SortView from '../view/sort-view.js';
 import {render} from '../render.js';
 
 export default class MainScreenPresenter {
-  constructor({parentElement}) {
+  constructor({
+    parentElement,
+    filmsModel,
+  }) {
     this.parentElement = parentElement;
+    this.filmsModel = filmsModel;
   }
 
   init() {
@@ -27,7 +31,8 @@ export default class MainScreenPresenter {
     this.filmsSectionComponent = new FilmsSectionView();
 
     this.filmsPresenter = new FilmsPresenter({
-      parentElement: this.filmsSectionComponent.getElement()
+      parentElement: this.filmsSectionComponent.getElement(),
+      filmsModel: this.filmsModel,
     });
     this.filmsPresenter.init();
 

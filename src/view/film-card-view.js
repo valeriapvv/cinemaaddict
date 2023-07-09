@@ -17,7 +17,7 @@ const getFilmCardTemplate = (film) => {
   } = film.filmInfo;
 
   const {
-    watchList,
+    watchlist,
     alreadyWatched,
     favorite,
   } = film.userDetails;
@@ -47,7 +47,7 @@ const getFilmCardTemplate = (film) => {
           class="
             film-card__controls-item
             film-card__controls-item--add-to-watchlist
-            ${watchList ? CONTROL_ACTIVE_CLASS_NAME : ''}
+            ${watchlist ? CONTROL_ACTIVE_CLASS_NAME : ''}
           "
           type="button"
         >
