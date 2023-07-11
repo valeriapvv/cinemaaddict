@@ -1,6 +1,5 @@
-import AbstractView from '../framework/abstract-view.js';
-
-const getFilmsCountTemplate = (filmsCount) => `<p>${filmsCount} movies inside</p>`;
+import AbstractView from '../../framework/abstract-view.js';
+import {getFilmsCountTemplate} from './template.js';
 
 export default class FilmsCountView extends AbstractView {
   constructor(filmsCount) {

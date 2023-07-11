@@ -1,7 +1,6 @@
-import AbstractView from '../framework/abstract-view.js';
-import {formatMinutes} from '../utils.js';
+import {formatMinutes} from '../../utils.js';
 
-const getFilmCardTemplate = (film) => {
+export const getFilmCardTemplate = (film) => {
   const CONTROL_ACTIVE_CLASS_NAME = 'film-card__controls-item--active';
 
   const {
@@ -79,14 +78,3 @@ const getFilmCardTemplate = (film) => {
     </article>
   `);
 };
-
-export default class FilmCardView extends AbstractView {
-  constructor(film) {
-    super();
-    this.film = film;
-  }
-
-  getTemplate() {
-    return getFilmCardTemplate(this.film);
-  }
-}

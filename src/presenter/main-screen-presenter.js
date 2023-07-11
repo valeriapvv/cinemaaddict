@@ -1,7 +1,7 @@
-import FilmsSectionView from '../view/films-section-view.js';
+import FilmsSectionView from '../view/films-section-view/films-section-view.js';
 import FilmsPresenter from './films-presenter.js';
-import FiltersView from '../view/filters-view.js';
-import SortView from '../view/sort-view.js';
+import FiltersView from '../view/filters-view/filters-view.js';
+import SortView from '../view/sort-view/sort-view.js';
 import {render} from '../render.js';
 
 export default class MainScreenPresenter {
