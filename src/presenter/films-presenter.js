@@ -10,37 +10,42 @@ const MAIN_FILMS_COUNT = 10;
 const SECONDARY_FILMS_COUNT = 2;
 
 export default class FilmsPresenter {
+  #parentElement = null;
+
+  #filmsModel = null;
+  #films = null;
+
   constructor({
     parentElement,
     filmsModel,
   }) {
-    this.parentElement = parentElement;
-    this.filmsModel = filmsModel;
+    this.#parentElement = parentElement;
+    this.#filmsModel = filmsModel;
   }
 
   init() {
-    this.films = [...this.filmsModel.getFilms()];
-    const filmsCount = this.films.length;
+    this.#films = this.#filmsModel.films;
+    const filmsCount = this.#films.length;
 
-    this.renderBlock({
+    this.#renderBlock({
       blockComponent: new FilmsBlockView(),
       itemsCount: Math.min(MAIN_FILMS_COUNT, filmsCount),
     });
 
-    this.renderBlock({
+    this.#renderBlock({
       blockComponent: new TopRatedFilmsBlockView(),
       itemsCount: Math.min(SECONDARY_FILMS_COUNT, filmsCount),
       hasShowMoreButton: false,
     });
 
-    this.renderBlock({
+    this.#renderBlock({
       blockComponent: new CommentedFilmsBlockView(),
       itemsCount: Math.min(SECONDARY_FILMS_COUNT, filmsCount),
       hasShowMoreButton: false,
     });
   }
 
-  renderBlock({
+  #renderBlock({
     blockComponent,
     itemsCount,
     hasShowMoreButton = true,
@@ -48,7 +53,7 @@ export default class FilmsPresenter {
     const blockElement = blockComponent.element;
     const filmsListComponent = new FilmsListView();
 
-    render(blockComponent, this.parentElement);
+    render(blockComponent, this.#parentElement);
     render(filmsListComponent, blockElement);
 
     if (hasShowMoreButton) {
@@ -56,7 +61,7 @@ export default class FilmsPresenter {
     }
 
     for (let i = 0; i < itemsCount; i++) {
-      const film = this.films[i];
+      const film = this.#films[i];
       render(new FilmCardView(film), filmsListComponent.element);
     }
   }
