@@ -1,14 +1,17 @@
-import FilmsCountView from '../view/films-count-view.js';
+import FilmsCountView from '../view/films-count-view/films-count-view.js';
 import {render} from '../render.js';
-import {TOTAL_FILMS_COUNT} from '../data/constants.js';
 
 export default class FilmsCountPresenter {
-  constructor({parentElement}) {
+  constructor({
+    parentElement,
+    filmsModel,
+  }) {
     this.parentElement = parentElement;
+    this.filmsModel = filmsModel;
   }
 
   init() {
-    const filmsCountComponent = new FilmsCountView({filmsCount: TOTAL_FILMS_COUNT});
-    render(filmsCountComponent, this.parentElement);
+    const filmsCount = this.filmsModel.getFilms().length;
+    render(new FilmsCountView(filmsCount), this.parentElement);
   }
 }

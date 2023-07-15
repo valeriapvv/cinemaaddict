@@ -1,20 +1,7 @@
 import AbstractView from '../../framework/abstract-view.js';
+import {getFilmsBlockTemplate} from './template.js';
 
 const DEFAULT_TITLE = 'All movies. Upcoming';
-
-const getFilmsBlockTemplate = ({
-  blockClassName = '',
-  title,
-  isVisibleTitle = false,
-} = {}) => `
-  <section class="films-list ${blockClassName}">
-    <h2
-      class="films-list__title ${!isVisibleTitle ? 'visually-hidden' : ''}"
-    >
-      ${title ?? DEFAULT_TITLE}
-    </h2>
-  </section>
-`;
 
 export default class FilmsBlockView extends AbstractView {
   getTemplate() {
@@ -27,7 +14,7 @@ export default class FilmsBlockView extends AbstractView {
 
   _setTemplate({
     blockClassName,
-    title,
+    title = DEFAULT_TITLE,
     isVisibleTitle,
   } = {}) {
     this._template = getFilmsBlockTemplate({

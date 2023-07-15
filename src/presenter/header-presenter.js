@@ -1,4 +1,4 @@
-import UserProfileView from '../view/user-profile-view.js';
+import UserProfileView from '../view/user-profile-view/user-profile-view.js';
 import {render} from '../render.js';
 
 export default class HeaderPresenter {
