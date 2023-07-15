@@ -32,10 +32,10 @@ const onShowPopup = () => {
   rootElement.classList.add('hide-overflow');
 };
 
+// eslint-disable-next-line no-unused-vars
 const popupPresenter = new PopupPresesnter({
   parentElement: rootElement,
   filmsModel,
   commentsModel,
   onShowPopup,
 });
-popupPresenter.init();
