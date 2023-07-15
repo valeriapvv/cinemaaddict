@@ -45,7 +45,7 @@ export default class FilmsPresenter {
     itemsCount,
     hasShowMoreButton = true,
   }) {
-    const blockElement = blockComponent.getElement();
+    const blockElement = blockComponent.element;
     const filmsListComponent = new FilmsListView();
 
     render(blockComponent, this.parentElement);
@@ -57,7 +57,7 @@ export default class FilmsPresenter {
 
     for (let i = 0; i < itemsCount; i++) {
       const film = this.films[i];
-      render(new FilmCardView(film), filmsListComponent.getElement());
+      render(new FilmCardView(film), filmsListComponent.element);
     }
   }
 }

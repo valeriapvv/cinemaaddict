@@ -31,7 +31,7 @@ export default class MainScreenPresenter {
     this.filmsSectionComponent = new FilmsSectionView();
 
     this.filmsPresenter = new FilmsPresenter({
-      parentElement: this.filmsSectionComponent.getElement(),
+      parentElement: this.filmsSectionComponent.element,
       filmsModel: this.filmsModel,
     });
     this.filmsPresenter.init();
