@@ -1,4 +1,3 @@
-import FilmsSectionView from '../view/films-section-view/films-section-view.js';
 import FilmsPresenter from './films-presenter.js';
 import FiltersView from '../view/filters-view/filters-view.js';
 import SortView from '../view/sort-view/sort-view.js';
@@ -31,14 +30,10 @@ export default class MainScreenPresenter {
   }
 
   #renderFilmsSection() {
-    const filmsSectionComponent = new FilmsSectionView();
-
     this.filmsPresenter = new FilmsPresenter({
-      parentElement: filmsSectionComponent.element,
+      parentElement: this.#parentElement,
       filmsModel: this.#filmsModel,
     });
     this.filmsPresenter.init();
-
-    render(filmsSectionComponent, this.#parentElement);
   }
 }

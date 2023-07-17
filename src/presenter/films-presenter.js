@@ -1,3 +1,4 @@
+import FilmsSectionView from '../view/films-section-view/films-section-view.js';
 import FilmsBlockView from '../view/films-block-view/films-block-view.js';
 import FilmsListView from '../view/films-list-view/films-list-view.js';
 import FilmCardView from '../view/film-card-view/film-card-view.js';
@@ -15,6 +16,8 @@ export default class FilmsPresenter {
   #filmsModel = null;
   #films = null;
 
+  #containerComponent = null;
+
   constructor({
     parentElement,
     filmsModel,
@@ -26,6 +29,8 @@ export default class FilmsPresenter {
   init() {
     this.#films = this.#filmsModel.films;
     const filmsCount = this.#films.length;
+
+    this.#renderContainer();
 
     this.#renderBlock({
       blockComponent: new FilmsBlockView(),
@@ -45,6 +50,11 @@ export default class FilmsPresenter {
     });
   }
 
+  #renderContainer() {
+    this.#containerComponent = new FilmsSectionView();
+    render(this.#containerComponent, this.#parentElement);
+  }
+
   #renderBlock({
     blockComponent,
     itemsCount,
@@ -53,7 +63,7 @@ export default class FilmsPresenter {
     const blockElement = blockComponent.element;
     const filmsListComponent = new FilmsListView();
 
-    render(blockComponent, this.#parentElement);
+    render(blockComponent, this.#containerComponent.element);
     render(filmsListComponent, blockElement);
 
     if (hasShowMoreButton) {

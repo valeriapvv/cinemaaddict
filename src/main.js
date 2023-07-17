@@ -16,9 +16,21 @@ const headerPresenter = new HeaderPresenter({
 });
 headerPresenter.init();
 
+const onShowPopup = () => {
+  rootElement.classList.add('hide-overflow');
+};
+
+const popupPresenter = new PopupPresesnter({
+  parentElement: rootElement,
+  filmsModel,
+  commentsModel,
+  onShowPopup,
+});
+
 const mainScreenPresenter = new MainScreenPresenter({
   parentElement: document.querySelector(ContainerSelector.MainScreen),
   filmsModel,
+  popupPresenter,
 });
 mainScreenPresenter.init();
 
@@ -27,15 +39,3 @@ const filmsCountPresenter = new FilmsCountPresenter({
   filmsModel,
 });
 filmsCountPresenter.init();
-
-const onShowPopup = () => {
-  rootElement.classList.add('hide-overflow');
-};
-
-// eslint-disable-next-line no-unused-vars
-const popupPresenter = new PopupPresesnter({
-  parentElement: rootElement,
-  filmsModel,
-  commentsModel,
-  onShowPopup,
-});
