@@ -1,4 +1,4 @@
-export const ElementSelector = {
+export const ContainerSelector = {
   Header: '.header',
   MainScreen: '.main',
   FooterInfo: '.footer__statistics',
