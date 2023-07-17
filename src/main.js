@@ -1,12 +1,14 @@
 import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
 import HeaderPresenter from './presenter/header-presenter.js';
-import MainScreenPresenter from './presenter/main-screen-presenter.js';
+import FilmsPresenter from './presenter/films-presenter.js';
+import {MainScreenPresenter} from './presenter/main-screen-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter.js';
 import PopupPresesnter from './presenter/popup-presenter.js';
 import {ContainerSelector} from './data/constants.js';
 
 const rootElement = document.body;
+const mainContainer = document.querySelector(ContainerSelector.MainScreen);
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
@@ -28,11 +30,17 @@ const popupPresenter = new PopupPresesnter({
 });
 
 const mainScreenPresenter = new MainScreenPresenter({
-  parentElement: document.querySelector(ContainerSelector.MainScreen),
+  parentElement: mainContainer,
+  filmsModel,
+});
+mainScreenPresenter.init();
+
+const filmsPresenter = new FilmsPresenter({
+  parentElement: mainContainer,
   filmsModel,
   popupPresenter,
 });
-mainScreenPresenter.init();
+filmsPresenter.init();
 
 const filmsCountPresenter = new FilmsCountPresenter({
   parentElement: document.querySelector(ContainerSelector.FooterInfo),
