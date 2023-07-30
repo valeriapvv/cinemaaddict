@@ -1,5 +1,7 @@
 import {formatMinutes} from '../../utils.js';
 
+export const FILM_LINK_CLASS_NAME = 'film-card__link';
+
 export const getFilmCardTemplate = (film) => {
   const CONTROL_ACTIVE_CLASS_NAME = 'film-card__controls-item--active';
 
@@ -29,7 +31,7 @@ export const getFilmCardTemplate = (film) => {
 
   return (`
     <article class="film-card">
-      <a class="film-card__link">
+      <a class="${FILM_LINK_CLASS_NAME}">
         <h3 class="film-card__title">${title}</h3>
         <p class="film-card__rating">${totalRating}</p>
         <p class="film-card__info">

@@ -24,7 +24,6 @@ const onShowPopup = () => {
 
 const popupPresenter = new PopupPresesnter({
   parentElement: rootElement,
-  filmsModel,
   commentsModel,
   onShowPopup,
 });

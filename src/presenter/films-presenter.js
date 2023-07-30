@@ -16,14 +16,19 @@ export default class FilmsPresenter {
   #filmsModel = null;
   #films = null;
 
+  #popupPresenter = null;
+
   #containerComponent = null;
+  #filmsListComponent = null;
 
   constructor({
     parentElement,
     filmsModel,
+    popupPresenter,
   }) {
     this.#parentElement = parentElement;
     this.#filmsModel = filmsModel;
+    this.#popupPresenter = popupPresenter;
   }
 
   init() {
@@ -61,18 +66,28 @@ export default class FilmsPresenter {
     hasShowMoreButton = true,
   }) {
     const blockElement = blockComponent.element;
-    const filmsListComponent = new FilmsListView();
+    this.#filmsListComponent = new FilmsListView();
 
     render(blockComponent, this.#containerComponent.element);
-    render(filmsListComponent, blockElement);
+    render(this.#filmsListComponent, blockElement);
 
     if (hasShowMoreButton) {
       render(new ShowMoreButtonView(), blockElement);
     }
 
     for (let i = 0; i < itemsCount; i++) {
-      const film = this.#films[i];
-      render(new FilmCardView(film), filmsListComponent.element);
+      this.#renderFilm(this.#films[i]);
     }
   }
+
+  #renderFilm(film) {
+    const filmCardComponent = new FilmCardView(film);
+    filmCardComponent.setCardClick(this.#onFilmCardClick);
+
+    render(filmCardComponent, this.#filmsListComponent.element);
+  }
+
+  #onFilmCardClick = (film) => {
+    this.#popupPresenter.init(film);
+  };
 }
