@@ -26,6 +26,7 @@ export default class PopupPresenter {
     this.#removeComponent();
 
     this.#popupComponent = new PopupView(film, this.#getCommentsById(film.comments));
+    this.#popupComponent.setClose(this.#onClose);
 
     render(
       this.#popupComponent,
@@ -35,10 +36,10 @@ export default class PopupPresenter {
     this.#onShowPopup();
   }
 
-  close() {
+  #onClose = () => {
     this.#removeComponent();
     this.#onClosePopup();
-  }
+  };
 
   #removeComponent() {
     if (this.#popupComponent) {

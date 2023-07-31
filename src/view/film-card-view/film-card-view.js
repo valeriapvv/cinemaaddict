@@ -18,6 +18,9 @@ export default class FilmCardView extends AbstractView {
 
     linkElement.addEventListener('click', (evt) => {
       evt.preventDefault();
+
+      // TODO: не перерисовываеть попап при клике на ту же карточку
+
       onCardClick(this.#film);
     });
   }
