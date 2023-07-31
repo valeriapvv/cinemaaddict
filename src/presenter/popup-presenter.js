@@ -8,21 +8,22 @@ export default class PopupPresenter {
   #commentsModel = null;
 
   #onShowPopup = null;
+  #onClosePopup = null;
 
   constructor({
     parentElement,
     commentsModel,
     onShowPopup,
+    onClosePopup,
   }) {
     this.#parentElement = parentElement;
     this.#commentsModel = commentsModel;
     this.#onShowPopup = onShowPopup;
+    this.#onClosePopup = onClosePopup;
   }
 
   init(film) {
-    if (this.#popupComponent) {
-      this.#popupComponent.removeElement();
-    }
+    this.#removeComponent();
 
     this.#popupComponent = new PopupView(film, this.#getCommentsById(film.comments));
 
@@ -32,6 +33,18 @@ export default class PopupPresenter {
     );
 
     this.#onShowPopup();
+  }
+
+  close() {
+    this.#removeComponent();
+    this.#onClosePopup();
+  }
+
+  #removeComponent() {
+    if (this.#popupComponent) {
+      this.#popupComponent.removeElement();
+      this.#popupComponent = null;
+    }
   }
 
   #getCommentsById(commentsIds) {

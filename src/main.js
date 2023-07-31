@@ -5,7 +5,7 @@ import FilmsPresenter from './presenter/films-presenter.js';
 import {MainScreenPresenter} from './presenter/main-screen-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter.js';
 import PopupPresesnter from './presenter/popup-presenter.js';
-import {ContainerSelector} from './data/constants.js';
+import {ContainerSelector, HIDE_OVERFLOW_CLASS_NAME} from './data/constants.js';
 
 const rootElement = document.body;
 const mainContainer = document.querySelector(ContainerSelector.MainScreen);
@@ -19,13 +19,18 @@ const headerPresenter = new HeaderPresenter({
 headerPresenter.init();
 
 const onShowPopup = () => {
-  rootElement.classList.add('hide-overflow');
+  rootElement.classList.add(HIDE_OVERFLOW_CLASS_NAME);
+};
+
+const onClosePopup = () => {
+  rootElement.classList.remove(HIDE_OVERFLOW_CLASS_NAME);
 };
 
 const popupPresenter = new PopupPresesnter({
   parentElement: rootElement,
   commentsModel,
   onShowPopup,
+  onClosePopup,
 });
 
 const mainScreenPresenter = new MainScreenPresenter({
