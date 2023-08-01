@@ -2,16 +2,19 @@ import FilmsCountView from '../view/films-count-view/films-count-view.js';
 import {render} from '../render.js';
 
 export default class FilmsCountPresenter {
+  #parentElement = null;
+  #filmsModel = null;
+
   constructor({
     parentElement,
     filmsModel,
   }) {
-    this.parentElement = parentElement;
-    this.filmsModel = filmsModel;
+    this.#parentElement = parentElement;
+    this.#filmsModel = filmsModel;
   }
 
   init() {
-    const filmsCount = this.filmsModel.getFilms().length;
-    render(new FilmsCountView(filmsCount), this.parentElement);
+    const filmsCount = this.#filmsModel.films.length;
+    render(new FilmsCountView(filmsCount), this.#parentElement);
   }
 }

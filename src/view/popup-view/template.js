@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import {formatMinutes} from '../../utils.js';
 import {EMOTIONS} from '../../data/constants.js';
 
+export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';
+
 const getPosterTemplate = ({poster, ageRating}) => (`
     <div class="film-details__poster">
       <img class="film-details__poster-img" src="${poster}" alt="">
@@ -189,7 +191,7 @@ export const getPopupTemplate = (film, comments) => {
         <div class="film-details__top-container">
 
           <div class="film-details__close">
-            <button class="film-details__close-btn" type="button">close</button>
+            <button class="${CLOSE_BUTTON_CLASS_NAME}" type="button">close</button>
           </div>
 
           <div class="film-details__info-wrap">

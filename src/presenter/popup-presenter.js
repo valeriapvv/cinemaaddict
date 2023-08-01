@@ -1,33 +1,55 @@
 import PopupView from '../view/popup-view/popup-view.js';
 import {render} from '../render.js';
 
-export default class PopupPresesnter {
+export default class PopupPresenter {
+  #parentElement = null;
+  #popupComponent = null;
+
+  #commentsModel = null;
+
+  #onShowPopup = null;
+  #onClosePopup = null;
+
   constructor({
     parentElement,
-    filmsModel,
     commentsModel,
     onShowPopup,
+    onClosePopup,
   }) {
-    this.parentElement = parentElement;
-    this.filmsModel = filmsModel;
-    this.commentsModel = commentsModel;
-    this.onShowPopup = onShowPopup;
+    this.#parentElement = parentElement;
+    this.#commentsModel = commentsModel;
+    this.#onShowPopup = onShowPopup;
+    this.#onClosePopup = onClosePopup;
   }
 
-  init() {
-    this.currentFilm = this.filmsModel.getFilms()[0];
+  init(film) {
+    this.#removeComponent();
+
+    this.#popupComponent = new PopupView(film, this.#getCommentsById(film.comments));
+    this.#popupComponent.setClose(this.#onClose);
 
     render(
-      new PopupView(this.currentFilm, this.getCommentsById()),
-      this.parentElement,
+      this.#popupComponent,
+      this.#parentElement,
     );
 
-    this.onShowPopup();
+    this.#onShowPopup();
   }
 
-  getCommentsById() {
-    const commentsIds = this.currentFilm.comments;
-    const allComments = [...this.commentsModel.getComments()];
+  #onClose = () => {
+    this.#removeComponent();
+    this.#onClosePopup();
+  };
+
+  #removeComponent() {
+    if (this.#popupComponent) {
+      this.#popupComponent.removeElement();
+      this.#popupComponent = null;
+    }
+  }
+
+  #getCommentsById(commentsIds) {
+    const allComments = this.#commentsModel.comments;
 
     return commentsIds.map((id) => allComments.find((comment) => comment.id === id));
   }

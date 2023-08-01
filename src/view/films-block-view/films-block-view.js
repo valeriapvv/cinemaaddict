@@ -4,12 +4,14 @@ import {getFilmsBlockTemplate} from './template.js';
 const DEFAULT_TITLE = 'All movies. Upcoming';
 
 export default class FilmsBlockView extends AbstractView {
-  getTemplate() {
-    if (!this._template) {
+  #template = null;
+
+  _getTemplate() {
+    if (!this.#template) {
       this._setTemplate();
     }
 
-    return this._template;
+    return this.#template;
   }
 
   _setTemplate({
@@ -17,7 +19,7 @@ export default class FilmsBlockView extends AbstractView {
     title = DEFAULT_TITLE,
     isVisibleTitle,
   } = {}) {
-    this._template = getFilmsBlockTemplate({
+    this.#template = getFilmsBlockTemplate({
       blockClassName,
       title,
       isVisibleTitle,
