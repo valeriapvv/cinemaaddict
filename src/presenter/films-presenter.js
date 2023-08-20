@@ -4,6 +4,7 @@ import FilmsBlockPresenter from './films-block-presenter.js';
 import MainFilmsBlockPresenter from './main-films-block-presenter.js';
 import TopRatedFilmsBlockView from '../view/films-block-view/top-rated-films-block-view.js';
 import CommentedFilmsBlockView from '../view/films-block-view/commented-films-block-view.js';
+import NoFilmsBlockView from '../view/films-block-view/no-films-block-view.js';
 import {render} from '../render.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
@@ -31,6 +32,11 @@ export default class FilmsPresenter {
   init() {
     this.#renderContainer();
 
+    if (!this.#filmsModel.films.length) {
+      this.#renderNoFilmsBlock();
+      return;
+    }
+
     this.#initMainFilms();
     this.#initTopRatedFilms();
     this.#initCommentedFilms();
@@ -39,6 +45,10 @@ export default class FilmsPresenter {
   #renderContainer() {
     this.#containerComponent = new FilmsSectionView();
     render(this.#containerComponent, this.#parentElement);
+  }
+
+  #renderNoFilmsBlock() {
+    render(new NoFilmsBlockView(), this.#containerComponent.element);
   }
 
   #initMainFilms() {
