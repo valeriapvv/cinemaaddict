@@ -7,8 +7,8 @@ import TopRatedFilmsBlockView from '../view/films-block-view/top-rated-films-blo
 import CommentedFilmsBlockView from '../view/films-block-view/commented-films-block-view.js';
 import {render} from '../render.js';
 
-const MAIN_FILMS_COUNT = 10;
-const SECONDARY_FILMS_COUNT = 2;
+const MAIN_FILMS_COUNT_TO_SHOW = 5;
+const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
 
 export default class FilmsPresenter {
   #parentElement = null;
@@ -19,7 +19,6 @@ export default class FilmsPresenter {
   #popupPresenter = null;
 
   #containerComponent = null;
-  #filmsListComponent = null;
 
   constructor({
     parentElement,
@@ -33,25 +32,19 @@ export default class FilmsPresenter {
 
   init() {
     this.#films = this.#filmsModel.films;
-    const filmsCount = this.#films.length;
 
     this.#renderContainer();
 
-    this.#renderBlock({
-      blockComponent: new FilmsBlockView(),
-      itemsCount: Math.min(MAIN_FILMS_COUNT, filmsCount),
-    });
+    this.#renderMainBlock();
 
     this.#renderBlock({
       blockComponent: new TopRatedFilmsBlockView(),
-      itemsCount: Math.min(SECONDARY_FILMS_COUNT, filmsCount),
-      hasShowMoreButton: false,
+      itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
     });
 
     this.#renderBlock({
       blockComponent: new CommentedFilmsBlockView(),
-      itemsCount: Math.min(SECONDARY_FILMS_COUNT, filmsCount),
-      hasShowMoreButton: false,
+      itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
     });
   }
 
@@ -60,34 +53,50 @@ export default class FilmsPresenter {
     render(this.#containerComponent, this.#parentElement);
   }
 
+  #renderMainBlock() {
+    const blockComponent = new FilmsBlockView();
+
+    this.#renderBlock({
+      blockComponent,
+      itemsCountToShow: MAIN_FILMS_COUNT_TO_SHOW,
+    });
+
+    this.#renderShowMoreButton(blockComponent.element);
+  }
+
   #renderBlock({
     blockComponent,
-    itemsCount,
-    hasShowMoreButton = true,
+    itemsCountToShow,
   }) {
-    const blockElement = blockComponent.element;
-    this.#filmsListComponent = new FilmsListView();
+    const filmsListComponent = new FilmsListView();
 
     render(blockComponent, this.#containerComponent.element);
-    render(this.#filmsListComponent, blockElement);
+    render(filmsListComponent, blockComponent.element);
 
-    if (hasShowMoreButton) {
-      render(new ShowMoreButtonView(), blockElement);
-    }
-
-    for (let i = 0; i < itemsCount; i++) {
-      this.#renderFilm(this.#films[i]);
+    for (let i = 0; i < Math.min(itemsCountToShow, this.#films.length); i++) {
+      this.#renderFilm(this.#films[i], filmsListComponent.element);
     }
   }
 
-  #renderFilm(film) {
+  #renderFilm(film, container) {
     const filmCardComponent = new FilmCardView(film);
     filmCardComponent.setCardClick(this.#onFilmCardClick);
 
-    render(filmCardComponent, this.#filmsListComponent.element);
+    render(filmCardComponent, container);
   }
 
   #onFilmCardClick = (film) => {
     this.#popupPresenter.init(film);
+  };
+
+  #renderShowMoreButton(parentElement) {
+    const button = new ShowMoreButtonView();
+    button.setClick(this.#onShowMoreButtonClick);
+
+    render(button, parentElement);
+  }
+
+  #onShowMoreButtonClick = () => {
+
   };
 }
