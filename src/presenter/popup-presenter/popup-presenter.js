@@ -1,5 +1,5 @@
-import PopupView from '../view/popup-view/popup-view.js';
-import {render} from '../render.js';
+import PopupView from '../../view/popup-view/popup-view.js';
+import {render} from '../../render.js';
 
 export default class PopupPresenter {
   #parentElement = null;
@@ -25,7 +25,9 @@ export default class PopupPresenter {
   init(film) {
     this.#removeComponent();
 
-    this.#popupComponent = new PopupView(film, this.#getCommentsById(film.comments));
+    const comments = this.#commentsModel.getCommentsById(film.comments);
+
+    this.#popupComponent = new PopupView(film, comments);
     this.#popupComponent.setClose(this.#onClose);
 
     render(
@@ -46,11 +48,5 @@ export default class PopupPresenter {
       this.#popupComponent.removeElement();
       this.#popupComponent = null;
     }
-  }
-
-  #getCommentsById(commentsIds) {
-    const allComments = this.#commentsModel.comments;
-
-    return commentsIds.map((id) => allComments.find((comment) => comment.id === id));
   }
 }

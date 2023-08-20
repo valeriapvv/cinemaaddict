@@ -1,10 +1,10 @@
 import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
-import HeaderPresenter from './presenter/header-presenter.js';
-import FilmsPresenter from './presenter/films-presenter.js';
-import {MainScreenPresenter} from './presenter/main-screen-presenter.js';
-import FilmsCountPresenter from './presenter/films-count-presenter.js';
-import PopupPresesnter from './presenter/popup-presenter.js';
+import HeaderPresenter from './presenter/header-presenter/header-presenter.js';
+import FilmsPresenter from './presenter/films-presenter/films-presenter.js';
+import {MainScreenPresenter} from './presenter/main-screen-persenter/main-screen-presenter.js';
+import FilmsCountPresenter from './presenter/films-count-presenter/films-count-presenter.js';
+import PopupPresesnter from './presenter/popup-presenter/popup-presenter.js';
 import {ContainerSelector, HIDE_OVERFLOW_CLASS_NAME} from './data/constants.js';
 
 const rootElement = document.body;
