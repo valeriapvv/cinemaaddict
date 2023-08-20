@@ -1,5 +1,5 @@
-import FilmsCountView from '../view/films-count-view/films-count-view.js';
-import {render} from '../render.js';
+import FilmsCountView from '../../view/films-count-view/films-count-view.js';
+import {render} from '../../render.js';
 
 export default class FilmsCountPresenter {
   #parentElement = null;
