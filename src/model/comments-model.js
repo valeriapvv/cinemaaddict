@@ -11,4 +11,8 @@ export default class CommentsModel {
 
     return [...this.#comments];
   }
+
+  getCommentsById(idList) {
+    return idList.map((id) => this.comments.find((comment) => comment.id === id));
+  }
 }
