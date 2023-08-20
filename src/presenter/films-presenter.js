@@ -1,30 +1,22 @@
 import FilmsSectionView from '../view/films-section-view/films-section-view.js';
 import FilmsBlockView from '../view/films-block-view/films-block-view.js';
-import FilmsListView from '../view/films-list-view/films-list-view.js';
-import FilmCardView from '../view/film-card-view/film-card-view.js';
-import ShowMoreButtonView from '../view/show-more-button-view/show-more-button-view.js';
-// import TopRatedFilmsBlockView from '../view/films-block-view/top-rated-films-block-view.js';
-// import CommentedFilmsBlockView from '../view/films-block-view/commented-films-block-view.js';
+import FilmsBlockPresenter from './films-block-presenter.js';
+import MainFilmsBlockPresenter from './main-films-block-presenter.js';
+import TopRatedFilmsBlockView from '../view/films-block-view/top-rated-films-block-view.js';
+import CommentedFilmsBlockView from '../view/films-block-view/commented-films-block-view.js';
 import {render} from '../render.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
-// const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
+const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
 
 export default class FilmsPresenter {
   #parentElement = null;
 
   #filmsModel = null;
-  #films = null;
 
   #popupPresenter = null;
 
   #containerComponent = null;
-  #filmsBlockComponent = null;
-  #filmsListComponent = null;
-  #showMoreButtonComponent = null;
-
-  #filmsCount = null;
-  #renderedFilmsCount = null;
 
   constructor({
     parentElement,
@@ -37,22 +29,11 @@ export default class FilmsPresenter {
   }
 
   init() {
-    this.#films = this.#filmsModel.films;
-    this.#filmsCount = this.#films.length;
-
     this.#renderContainer();
 
-    this.#renderMainBlock();
-
-    // this.#renderBlock({
-    //   blockComponent: new TopRatedFilmsBlockView(),
-    //   itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
-    // });
-
-    // this.#renderBlock({
-    //   blockComponent: new CommentedFilmsBlockView(),
-    //   itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
-    // });
+    this.#initMainFilms();
+    this.#initTopRatedFilms();
+    this.#initCommentedFilms();
   }
 
   #renderContainer() {
@@ -60,73 +41,36 @@ export default class FilmsPresenter {
     render(this.#containerComponent, this.#parentElement);
   }
 
-  #renderMainBlock() {
-    this.#filmsBlockComponent = new FilmsBlockView();
-
-    this.#renderedFilmsCount = MAIN_FILMS_COUNT_TO_SHOW;
-
-    this.#renderBlock({
-      blockComponent: this.#filmsBlockComponent,
-      itemsCountToShow: this.#renderedFilmsCount,
+  #initMainFilms() {
+    const mainFilmsPresenter = new MainFilmsBlockPresenter({
+      parentElement: this.#containerComponent.element,
+      filmsModel: this.#filmsModel,
+      popupPresenter: this.#popupPresenter,
+      blockComponent: new FilmsBlockView(),
+      itemsCountToShow: MAIN_FILMS_COUNT_TO_SHOW,
     });
-
-    if (!this.#isAllFilmsRendered()) {
-      this.#renderShowMoreButton();
-    }
+    mainFilmsPresenter.init();
   }
 
-  #renderBlock({
-    blockComponent,
-    itemsCountToShow,
-  }) {
-    this.#filmsListComponent = new FilmsListView();
-
-    render(blockComponent, this.#containerComponent.element);
-    render(this.#filmsListComponent, blockComponent.element);
-
-    for (let i = 0; i < Math.min(itemsCountToShow, this.#filmsCount); i++) {
-      this.#renderFilm(this.#films[i], this.#filmsListComponent.element);
-    }
+  #initTopRatedFilms() {
+    const topRatedFilmsPresenter = new FilmsBlockPresenter({
+      parentElement: this.#containerComponent.element,
+      filmsModel: this.#filmsModel,
+      popupPresenter: this.#popupPresenter,
+      blockComponent: new TopRatedFilmsBlockView(),
+      itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
+    });
+    topRatedFilmsPresenter.init();
   }
 
-  #renderFilm(film) {
-    const filmCardComponent = new FilmCardView(film);
-    filmCardComponent.setCardClick(this.#onFilmCardClick);
-
-    render(filmCardComponent, this.#filmsListComponent.element);
-  }
-
-  #onFilmCardClick = (film) => {
-    this.#popupPresenter.init(film);
-  };
-
-  #renderShowMoreButton() {
-    this.#showMoreButtonComponent = new ShowMoreButtonView();
-    this.#showMoreButtonComponent.setClick(this.#onShowMoreButtonClick);
-
-    render(this.#showMoreButtonComponent, this.#filmsBlockComponent.element);
-  }
-
-  #onShowMoreButtonClick = () => {
-    const firstIndex = this.#renderedFilmsCount;
-    const lastIndex = Math.min(
-      this.#renderedFilmsCount + MAIN_FILMS_COUNT_TO_SHOW - 1,
-      this.#filmsCount - 1,
-    );
-
-    for (let i = firstIndex; i <= lastIndex; i++) {
-      this.#renderFilm(this.#films[i], this.#filmsListComponent);
-    }
-
-    this.#renderedFilmsCount += MAIN_FILMS_COUNT_TO_SHOW;
-
-    if (this.#isAllFilmsRendered()) {
-      this.#showMoreButtonComponent.removeElement();
-      this.#showMoreButtonComponent = null;
-    }
-  };
-
-  #isAllFilmsRendered() {
-    return this.#renderedFilmsCount >= this.#filmsCount;
+  #initCommentedFilms() {
+    const commentedFilmsPresenter = new FilmsBlockPresenter({
+      parentElement: this.#containerComponent.element,
+      filmsModel: this.#filmsModel,
+      popupPresenter: this.#popupPresenter,
+      blockComponent: new CommentedFilmsBlockView(),
+      itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
+    });
+    commentedFilmsPresenter.init();
   }
 }
