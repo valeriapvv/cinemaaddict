@@ -1,6 +1,6 @@
 import FilmsListView from '../../view/films-list-view/films-list-view.js';
 import FilmCardView from '../../view/film-card-view/film-card-view.js';
-import {render} from '../../render.js';
+import {render} from '../../framework/render.js';
 
 export default class FilmsBlockPresenter {
   #parentElement = null;

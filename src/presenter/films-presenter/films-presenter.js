@@ -5,7 +5,7 @@ import MainFilmsBlockPresenter from './main-films-block-presenter.js';
 import TopRatedFilmsBlockView from '../../view/films-block-view/top-rated-films-block-view.js';
 import CommentedFilmsBlockView from '../../view/films-block-view/commented-films-block-view.js';
 import NoFilmsBlockView from '../../view/films-block-view/no-films-block-view.js';
-import {render} from '../../render.js';
+import {render} from '../../framework/render.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;

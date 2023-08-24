@@ -1,4 +1,5 @@
-import AbstractView from '../../framework/abstract-view.js';
+
+import AbstractView from '../../framework/view/abstract-view.js';
 import {getFilmCardTemplate, FILM_LINK_CLASS_NAME} from './template.js';
 
 export default class FilmCardView extends AbstractView {

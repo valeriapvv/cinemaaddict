@@ -1,6 +1,6 @@
 import FilmsBlockPresenter from './films-block-presenter.js';
 import ShowMoreButtonView from '../../view/show-more-button-view/show-more-button-view.js';
-import {render} from '../../render.js';
+import {render} from '../../framework/render.js';
 
 export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   #showMoreButtonComponent = null;
