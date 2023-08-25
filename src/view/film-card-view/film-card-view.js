@@ -10,7 +10,7 @@ export default class FilmCardView extends AbstractView {
     this.#film = film;
   }
 
-  _getTemplate() {
+  get template() {
     return getFilmCardTemplate(this.#film);
   }
 

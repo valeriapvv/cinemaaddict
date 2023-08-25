@@ -9,7 +9,7 @@ export default class FilmsCountView extends AbstractView {
     this.#filmsCount = filmsCount;
   }
 
-  _getTemplate() {
+  get template() {
     return getFilmsCountTemplate(this.#filmsCount);
   }
 }

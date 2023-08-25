@@ -2,7 +2,7 @@ import AbstractView from '../../framework/view/abstract-view.js';
 import {getShowMoreButtonTemplate} from './template.js';
 
 export default class ShowMoreButtonView extends AbstractView {
-  _getTemplate() {
+  get template() {
     return getShowMoreButtonTemplate();
   }
 

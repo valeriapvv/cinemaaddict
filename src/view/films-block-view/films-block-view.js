@@ -6,7 +6,7 @@ const DEFAULT_TITLE = 'All movies. Upcoming';
 export default class FilmsBlockView extends AbstractView {
   #template = null;
 
-  _getTemplate() {
+  get template() {
     if (!this.#template) {
       this._setTemplate();
     }

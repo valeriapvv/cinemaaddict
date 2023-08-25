@@ -13,7 +13,7 @@ export default class PopupView extends AbstractView {
     this.#comments = comments;
   }
 
-  _getTemplate() {
+  get template() {
     return getPopupTemplate(this.#film, this.#comments);
   }
 
