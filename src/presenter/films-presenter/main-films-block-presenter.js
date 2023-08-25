@@ -1,6 +1,6 @@
 import FilmsBlockPresenter from './films-block-presenter.js';
 import ShowMoreButtonView from '../../view/show-more-button-view/show-more-button-view.js';
-import {render} from '../../framework/render.js';
+import {remove, render} from '../../framework/render.js';
 
 export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   #showMoreButtonComponent = null;
@@ -37,7 +37,7 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
     this.#renderedFilmsCount += this._itemsCountToShow;
 
     if (this.#isAllFilmsRendered()) {
-      this.#showMoreButtonComponent.removeElement();
+      remove(this.#showMoreButtonComponent);
       this.#showMoreButtonComponent = null;
     }
   };

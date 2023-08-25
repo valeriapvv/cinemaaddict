@@ -1,5 +1,5 @@
 import PopupView from '../../view/popup-view/popup-view.js';
-import {render} from '../../framework/render.js';
+import {remove, render} from '../../framework/render.js';
 
 export default class PopupPresenter {
   #parentElement = null;
@@ -45,7 +45,7 @@ export default class PopupPresenter {
 
   #removeComponent() {
     if (this.#popupComponent) {
-      this.#popupComponent.removeElement();
+      remove(this.#popupComponent);
       this.#popupComponent = null;
     }
   }
