@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/abstract-view.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 import {getFilmsBlockTemplate} from './template.js';
 
 const DEFAULT_TITLE = 'All movies. Upcoming';
@@ -6,7 +6,7 @@ const DEFAULT_TITLE = 'All movies. Upcoming';
 export default class FilmsBlockView extends AbstractView {
   #template = null;
 
-  _getTemplate() {
+  get template() {
     if (!this.#template) {
       this._setTemplate();
     }

@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/abstract-view.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 import {CLOSE_BUTTON_CLASS_NAME, getPopupTemplate} from './template.js';
 
 export default class PopupView extends AbstractView {
@@ -13,7 +13,7 @@ export default class PopupView extends AbstractView {
     this.#comments = comments;
   }
 
-  _getTemplate() {
+  get template() {
     return getPopupTemplate(this.#film, this.#comments);
   }
 

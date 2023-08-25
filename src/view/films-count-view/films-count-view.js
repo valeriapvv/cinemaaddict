@@ -1,4 +1,4 @@
-import AbstractView from '../../framework/abstract-view.js';
+import AbstractView from '../../framework/view/abstract-view.js';
 import {getFilmsCountTemplate} from './template.js';
 
 export default class FilmsCountView extends AbstractView {
@@ -9,7 +9,7 @@ export default class FilmsCountView extends AbstractView {
     this.#filmsCount = filmsCount;
   }
 
-  _getTemplate() {
+  get template() {
     return getFilmsCountTemplate(this.#filmsCount);
   }
 }
