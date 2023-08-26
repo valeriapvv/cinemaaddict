@@ -6,19 +6,26 @@ import {render} from '../../framework/render.js';
 export class MainScreenPresenter {
   #parentElement = null;
 
+  #filtersModel = null;
+  #filters = null;
+
   constructor({
     parentElement,
+    filtersModel,
   }) {
     this.#parentElement = parentElement;
+    this.#filtersModel = filtersModel;
   }
 
   init() {
+    this.#filters = this.#filtersModel.filters;
+
     this.#renderFilters();
     this.#renderSort();
   }
 
   #renderFilters() {
-    render(new FiltersView(), this.#parentElement);
+    render(new FiltersView(this.#filters), this.#parentElement);
   }
 
   #renderSort() {

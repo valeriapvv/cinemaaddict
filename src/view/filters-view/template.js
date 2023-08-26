@@ -1,8 +1,27 @@
-export const getFiltersTemplate = () => `
+import {FilterType} from '../../data/constants.js';
+
+// TODO: Фильтр 'All movies' без количества фильмов
+
+const FiltersLabel = {
+  [FilterType.All]: 'All movies',
+  [FilterType.Watchlist]: 'Watchlist',
+  [FilterType.History]: 'History',
+  [FilterType.Favorites]: 'Favorites',
+};
+
+const ACTIVE_FILTER_CLASS_NAME = 'main-navigation__item--active';
+
+const getFilterItemTemplate = ({name, count, isActive}) => `
+  <a
+    class="main-navigation__item ${isActive ? ACTIVE_FILTER_CLASS_NAME : ''}"
+    href="#${name}"
+  >
+    ${FiltersLabel[name]} <span class="main-navigation__item-count">${count}</span>
+  </a>
+`;
+
+export const getFiltersTemplate = (filters) => `
   <nav class="main-navigation">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+    ${filters.map(getFilterItemTemplate).join('')}
   </nav>
 `;

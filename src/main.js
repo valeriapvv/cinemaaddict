@@ -1,5 +1,6 @@
 import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
+import FiltersModel from './model/filters-model.js';
 import HeaderPresenter from './presenter/header-presenter/header-presenter.js';
 import FilmsPresenter from './presenter/films-presenter/films-presenter.js';
 import {MainScreenPresenter} from './presenter/main-screen-persenter/main-screen-presenter.js';
@@ -12,6 +13,10 @@ const mainContainer = document.querySelector(ContainerSelector.MainScreen);
 
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
+
+// eslint-disable-next-line no-unused-vars
+const filtersModel = new FiltersModel();
+filtersModel.createFilters(filmsModel.films);
 
 const headerPresenter = new HeaderPresenter({
   parentElement: document.querySelector(ContainerSelector.Header)
@@ -35,7 +40,7 @@ const popupPresenter = new PopupPresesnter({
 
 const mainScreenPresenter = new MainScreenPresenter({
   parentElement: mainContainer,
-  filmsModel,
+  filtersModel,
 });
 mainScreenPresenter.init();
 
