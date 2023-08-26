@@ -2,6 +2,7 @@ import {FilterType} from '../data/constants.js';
 import {isFavorite, isInHistory, isInWatchlist} from '../utils.js';
 
 const filter = {
+  [FilterType.All]: (films) => films,
   [FilterType.Watchlist]: (films) => films.filter(isInWatchlist),
   [FilterType.History]: (films) => films.filter(isInHistory),
   [FilterType.Favorites]: (films) => films.filter(isFavorite),

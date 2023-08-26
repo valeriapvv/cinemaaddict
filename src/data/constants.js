@@ -5,6 +5,7 @@ export const ContainerSelector = {
 };
 
 export const FilterType = {
+  All: 'all',
   Watchlist: 'watchlist',
   History: 'history',
   Favorites: 'favorites',

@@ -16,6 +16,7 @@ const commentsModel = new CommentsModel();
 
 // eslint-disable-next-line no-unused-vars
 const filtersModel = new FiltersModel();
+filtersModel.createFilters(filmsModel.films);
 
 const headerPresenter = new HeaderPresenter({
   parentElement: document.querySelector(ContainerSelector.Header)
@@ -39,7 +40,7 @@ const popupPresenter = new PopupPresesnter({
 
 const mainScreenPresenter = new MainScreenPresenter({
   parentElement: mainContainer,
-  filmsModel,
+  filtersModel,
 });
 mainScreenPresenter.init();
 
