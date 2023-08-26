@@ -5,8 +5,6 @@ export default class PopupView extends AbstractView {
   #film = null;
   #comments = null;
 
-  #onClose = null;
-
   constructor(film, comments) {
     super();
     this.#film = film;
@@ -18,20 +16,24 @@ export default class PopupView extends AbstractView {
   }
 
   setClose(onClose) {
-    this.#onClose = onClose;
+    this._callback.close = onClose;
 
     const closeButton = this.element.querySelector(`.${CLOSE_BUTTON_CLASS_NAME}`);
 
     // TODO: закрытие по клику вне попапа
 
-    closeButton.addEventListener('click', this.#onClose);
+    closeButton.addEventListener('click', this.#onClick);
     document.addEventListener('keydown', this.#onEscKeydown);
   }
+
+  #onClick = () => {
+    this._callback.close();
+  };
 
   #onEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#onClose();
+      this._callback.close();
     }
   };
 
