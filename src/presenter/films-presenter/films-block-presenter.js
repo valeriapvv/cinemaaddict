@@ -29,17 +29,21 @@ export default class FilmsBlockPresenter {
     render(this._blockComponent, this.#parentElement);
     render(this._filmsListComponent, this._blockComponent.element);
 
-    for (let i = 0; i < Math.min(this._itemsCountToShow, this._filmsCount); i++) {
-      this._renderFilm(this._films[i], this._filmsListComponent.element);
-    }
+    this._renderFilms(0, this._itemsCountToShow);
   }
 
-  _renderFilm(film) {
+  _renderFilms(from, to) {
+    this._films
+      .slice(from, to)
+      .forEach(this.#renderFilm);
+  }
+
+  #renderFilm = (film) => {
     const filmCardComponent = new FilmCardView(film);
     filmCardComponent.setCardClick(this.#onFilmCardClick);
 
     render(filmCardComponent, this._filmsListComponent.element);
-  }
+  };
 
   #onFilmCardClick = (film) => {
     this.#popupPresenter.init(film);

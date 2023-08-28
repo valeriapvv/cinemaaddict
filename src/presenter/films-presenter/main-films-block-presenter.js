@@ -7,9 +7,9 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   #renderedFilmsCount = null;
 
   init() {
-    this.#renderedFilmsCount = this._itemsCountToShow;
-
     super.init();
+
+    this.#renderedFilmsCount = this._itemsCountToShow;
 
     if (!this.#isAllFilmsRendered()) {
       this.#renderShowMoreButton();
@@ -24,15 +24,10 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   }
 
   #onShowMoreButtonClick = () => {
-    const firstIndex = this.#renderedFilmsCount;
-    const lastIndex = Math.min(
-      this.#renderedFilmsCount + this._itemsCountToShow - 1,
-      this._filmsCount - 1,
+    this._renderFilms(
+      this.#renderedFilmsCount,
+      this.#renderedFilmsCount + this._itemsCountToShow,
     );
-
-    for (let i = firstIndex; i <= lastIndex; i++) {
-      this._renderFilm(this._films[i], this._filmsListComponent);
-    }
 
     this.#renderedFilmsCount += this._itemsCountToShow;
 
