@@ -1,11 +1,13 @@
 import FilmsListView from '../../view/films-list-view/films-list-view.js';
-import FilmCardView from '../../view/film-card-view/film-card-view.js';
+import FilmCardPresenter from '../film-card-presenter/film-card-presenter.js';
 import {render} from '../../framework/render.js';
 
 export default class FilmsBlockPresenter {
   #parentElement = null;
 
   #popupPresenter = null;
+
+  #filmPresenterMap = new Map();
 
   constructor({
     parentElement,
@@ -39,10 +41,13 @@ export default class FilmsBlockPresenter {
   }
 
   #renderFilm = (film) => {
-    const filmCardComponent = new FilmCardView(film);
-    filmCardComponent.setCardClick(this.#onFilmCardClick);
+    const filmCardPresenter = new FilmCardPresenter({
+      parentElement: this._filmsListComponent.element,
+      onCardClick: this.#onFilmCardClick,
+    });
+    filmCardPresenter.init(film);
 
-    render(filmCardComponent, this._filmsListComponent.element);
+    this.#filmPresenterMap.set(film.id, filmCardPresenter);
   };
 
   #onFilmCardClick = (film) => {
