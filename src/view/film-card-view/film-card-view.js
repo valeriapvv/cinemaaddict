@@ -15,14 +15,14 @@ export default class FilmCardView extends AbstractView {
   }
 
   setCardClick(onCardClick) {
+    this._callback.cardClick = onCardClick;
     const linkElement = this.element.querySelector(`.${FILM_LINK_CLASS_NAME}`);
 
-    linkElement.addEventListener('click', (evt) => {
-      evt.preventDefault();
-
-      // TODO: не перерисовываеть попап при клике на ту же карточку
-
-      onCardClick(this.#film);
-    });
+    linkElement.addEventListener('click', this.#onCardClick);
   }
+
+  #onCardClick = (evt) => {
+    evt.preventDefault();
+    this._callback.cardClick(this.#film);
+  };
 }
