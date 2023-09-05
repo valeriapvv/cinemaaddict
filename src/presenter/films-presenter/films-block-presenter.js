@@ -44,6 +44,7 @@ export default class FilmsBlockPresenter {
     const filmCardPresenter = new FilmCardPresenter({
       parentElement: this._filmsListComponent.element,
       onCardClick: this.#onFilmCardClick,
+      onAddToWatchlistClick: this.#onAddToWatchlistClick,
     });
     filmCardPresenter.init(film);
 
@@ -52,5 +53,32 @@ export default class FilmsBlockPresenter {
 
   #onFilmCardClick = (film) => {
     this.#popupPresenter.init(film);
+  };
+
+  #onAddToWatchlistClick = (film) => {
+    const {userDetails} = film;
+    const {watchlist} = userDetails;
+
+    const updatedFilm = {
+      ...film,
+      userDetails: {
+        ...userDetails,
+        watchlist: !watchlist,
+      },
+    };
+
+    this.#updateFilm(updatedFilm);
+  };
+
+  #updateFilm(updatedFilm) {
+    this._filmsModel.update(updatedFilm);
+    this._films = this._filmsModel.films;
+
+    this.#redrawFilmCard(updatedFilm);
+  }
+
+  #redrawFilmCard = (film) => {
+    const filmCardPresenter = this.#filmPresenterMap.get(film.id);
+    filmCardPresenter.init(film);
   };
 }

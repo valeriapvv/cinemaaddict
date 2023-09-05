@@ -11,4 +11,15 @@ export default class FilmsModel {
 
     return [...this.#films];
   }
+
+  update(updatedFilm) {
+    const prevFilms = this.#films;
+    const index = prevFilms.findIndex(({id}) => id === updatedFilm.id);
+
+    this.#films = [
+      ...prevFilms.slice(0, index),
+      updatedFilm,
+      ...prevFilms.slice(index + 1),
+    ];
+  }
 }
