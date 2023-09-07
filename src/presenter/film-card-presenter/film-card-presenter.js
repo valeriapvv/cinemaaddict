@@ -7,6 +7,8 @@ export default class FilmCardPresenter {
 
   #onCardClick = null;
   #onAddToWatchlistClick = null;
+  #onAlreadyWatchedClick = null;
+  #onFavoriteClick = null;
 
   #film = null;
 
@@ -14,10 +16,14 @@ export default class FilmCardPresenter {
     parentElement,
     onCardClick,
     onAddToWatchlistClick,
+    onAlreadyWatchedClick,
+    onFavoriteClick,
   }) {
     this.#parentElement = parentElement;
     this.#onCardClick = onCardClick;
     this.#onAddToWatchlistClick = onAddToWatchlistClick;
+    this.#onAlreadyWatchedClick = onAlreadyWatchedClick;
+    this.#onFavoriteClick = onFavoriteClick;
   }
 
   init(film) {
@@ -26,8 +32,7 @@ export default class FilmCardPresenter {
     const prevComponent = this.#cardComponent;
 
     this.#cardComponent = new FilmCardView(this.#film);
-    this.#cardComponent.setCardClick(this.#onCardClick);
-    this.#cardComponent.setAddToWatchlistClick(this.#onAddToWatchlistClick);
+    this.#setHandlers();
 
     if (prevComponent === null) {
       render(this.#cardComponent, this.#parentElement);
@@ -35,5 +40,12 @@ export default class FilmCardPresenter {
     }
 
     replace(this.#cardComponent, prevComponent);
+  }
+
+  #setHandlers() {
+    this.#cardComponent.setCardClick(this.#onCardClick);
+    this.#cardComponent.setAddToWatchlistClick(this.#onAddToWatchlistClick);
+    this.#cardComponent.setAlreadyWatchedClick(this.#onAlreadyWatchedClick);
+    this.#cardComponent.setFavoriteClick(this.#onFavoriteClick);
   }
 }

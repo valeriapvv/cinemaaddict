@@ -2,6 +2,8 @@ import FilmsListView from '../../view/films-list-view/films-list-view.js';
 import FilmCardPresenter from '../film-card-presenter/film-card-presenter.js';
 import {render} from '../../framework/render.js';
 
+// TODO: Перенести логику изменения данных в модель?
+
 export default class FilmsBlockPresenter {
   #parentElement = null;
 
@@ -45,6 +47,8 @@ export default class FilmsBlockPresenter {
       parentElement: this._filmsListComponent.element,
       onCardClick: this.#onFilmCardClick,
       onAddToWatchlistClick: this.#onAddToWatchlistClick,
+      onAlreadyWatchedClick: this.#onAlreadyWatchedClick,
+      onFavoriteClick: this.#onFavoriteClick,
     });
     filmCardPresenter.init(film);
 
@@ -64,6 +68,38 @@ export default class FilmsBlockPresenter {
       userDetails: {
         ...userDetails,
         watchlist: !watchlist,
+      },
+    };
+
+    this.#updateFilm(updatedFilm);
+  };
+
+  #onAlreadyWatchedClick = (film) => {
+    const {userDetails} = film;
+    const alreadyWatched = !userDetails.alreadyWatched;
+    const watchingDate = alreadyWatched ? new Date().toISOString() : null;
+
+    const updatedFilm = {
+      ...film,
+      userDetails: {
+        ...userDetails,
+        alreadyWatched,
+        watchingDate,
+      },
+    };
+
+    this.#updateFilm(updatedFilm);
+  };
+
+  #onFavoriteClick = (film) => {
+    const {userDetails} = film;
+    const {favorite} = userDetails;
+
+    const updatedFilm = {
+      ...film,
+      userDetails: {
+        ...userDetails,
+        favorite: !favorite,
       },
     };
 
