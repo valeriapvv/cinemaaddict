@@ -42,7 +42,6 @@ export default class PopupView extends AbstractView {
 
   #onEscKeydown = (evt) => {
     if (evt.key === 'Escape') {
-      console.log('ESC');
       evt.preventDefault();
       this._callback.close();
     }
