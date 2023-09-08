@@ -4,6 +4,12 @@ import {EMOTIONS} from '../../data/constants.js';
 
 export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';
 
+export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-details__control-button--add-to-watchlist';
+
+export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--mark-as-watched';
+
+export const ADD_TO_FAVORITES_CLASS_NAME = 'film-details__control-button--favorite';
+
 const getPosterTemplate = ({poster, ageRating}) => (`
     <div class="film-details__poster">
       <img class="film-details__poster-img" src="${poster}" alt="">
@@ -95,7 +101,7 @@ const getControlsTemplate = ({
       <button
         class="
           film-details__control-button
-          film-details__control-button--watchlist
+          ${ADD_TO_WATCHLIST_CLASS_NAME}
           ${watchlist ? controlActiveClassName : ''}
         "
         type="button"
@@ -108,7 +114,7 @@ const getControlsTemplate = ({
       <button
         class="
           film-details__control-button
-          film-details__control-button--watched
+          ${ALREADY_WATCHED_CLASS_NAME}
           ${alreadyWatched ? controlActiveClassName : ''}
         "
         type="button"
@@ -122,7 +128,7 @@ const getControlsTemplate = ({
         type="button"
         class="
           film-details__control-button
-          film-details__control-button--favorite
+          ${ADD_TO_FAVORITES_CLASS_NAME}
           ${favorite ? controlActiveClassName : ''}
         "
         id="favorite"

@@ -2,6 +2,12 @@ import {formatMinutes} from '../../utils.js';
 
 export const FILM_LINK_CLASS_NAME = 'film-card__link';
 
+export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-card__controls-item--add-to-watchlist';
+
+export const ALREADY_WATCHED_CLASS_NAME = 'film-card__controls-item--mark-as-watched';
+
+export const ADD_TO_FAVORITES_CLASS_NAME = 'film-card__controls-item--favorite';
+
 export const getFilmCardTemplate = (film) => {
   const CONTROL_ACTIVE_CLASS_NAME = 'film-card__controls-item--active';
 
@@ -47,7 +53,7 @@ export const getFilmCardTemplate = (film) => {
         <button
           class="
             film-card__controls-item
-            film-card__controls-item--add-to-watchlist
+            ${ADD_TO_WATCHLIST_CLASS_NAME}
             ${watchlist ? CONTROL_ACTIVE_CLASS_NAME : ''}
           "
           type="button"
@@ -58,7 +64,7 @@ export const getFilmCardTemplate = (film) => {
         <button
           class="
             film-card__controls-item
-            film-card__controls-item--mark-as-watched
+            ${ALREADY_WATCHED_CLASS_NAME}
             ${alreadyWatched ? CONTROL_ACTIVE_CLASS_NAME : ''}
           "
           type="button"
@@ -69,7 +75,7 @@ export const getFilmCardTemplate = (film) => {
         <button
           class="
             film-card__controls-item
-            film-card__controls-item--favorite
+            ${ADD_TO_FAVORITES_CLASS_NAME}
             ${favorite ? CONTROL_ACTIVE_CLASS_NAME : ''}
           "
           type="button"

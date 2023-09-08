@@ -1,5 +1,5 @@
 import PopupView from '../../view/popup-view/popup-view.js';
-import {remove, render} from '../../framework/render.js';
+import {remove, render, replace} from '../../framework/render.js';
 
 export default class PopupPresenter {
   #parentElement = null;
@@ -9,6 +9,9 @@ export default class PopupPresenter {
 
   #onShowPopup = null;
   #onClosePopup = null;
+  #onAddToWatchlistClick = null;
+  #onAlreadyWatchedClick = null;
+  #onFavoriteClick = null;
 
   constructor({
     parentElement,
@@ -23,19 +26,57 @@ export default class PopupPresenter {
   }
 
   init(film) {
-    this.#removeComponent();
+    const prevComponent = this.#popupComponent;
 
     const comments = this.#commentsModel.getCommentsById(film.comments);
 
     this.#popupComponent = new PopupView(film, comments);
-    this.#popupComponent.setClose(this.#onClose);
-
-    render(
-      this.#popupComponent,
-      this.#parentElement,
-    );
+    this.#setInnerEventHandlers();
 
     this.#onShowPopup();
+
+    if (prevComponent === null) {
+      render(
+        this.#popupComponent,
+        this.#parentElement,
+      );
+      return;
+    }
+
+    replace(this.#popupComponent, prevComponent);
+    remove(prevComponent);
+  }
+
+  addEventHandlers({
+    onAddToWatchlistClick = null,
+    onAlreadyWatchedClick = null,
+    onFavoriteClick = null,
+  }) {
+    this.#onAddToWatchlistClick = onAddToWatchlistClick;
+    this.#onAlreadyWatchedClick = onAlreadyWatchedClick;
+    this.#onFavoriteClick = onFavoriteClick;
+  }
+
+  #setInnerEventHandlers() {
+    this.#popupComponent.setClose(this.#onClose);
+
+    if (this.#onAddToWatchlistClick) {
+      this.#popupComponent.setAddToWatchlistClick(this.#onAddToWatchlistClick);
+    }
+
+    if (this.#onAlreadyWatchedClick) {
+      this.#popupComponent.setAlreadyWatchedClick(this.#onAlreadyWatchedClick);
+    }
+
+    if (this.#onFavoriteClick) {
+      this.#popupComponent.setFavoriteClick(this.#onFavoriteClick);
+    }
+  }
+
+  update(film) {
+    if (this.#popupComponent) {
+      this.init(film);
+    }
   }
 
   #onClose = () => {
