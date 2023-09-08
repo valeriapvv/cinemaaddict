@@ -56,6 +56,11 @@ export default class FilmsBlockPresenter {
   };
 
   #onFilmCardClick = (film) => {
+    this.#popupPresenter.addEventHandlers({
+      onAddToWatchlistClick: this.#onAddToWatchlistClick,
+      onAlreadyWatchedClick: this.#onAlreadyWatchedClick,
+      onFavoriteClick: this.#onFavoriteClick,
+    });
     this.#popupPresenter.init(film);
   };
 
@@ -111,6 +116,7 @@ export default class FilmsBlockPresenter {
     this._films = this._filmsModel.films;
 
     this.#redrawFilmCard(updatedFilm);
+    this.#popupPresenter.update(updatedFilm);
   }
 
   #redrawFilmCard = (film) => {
