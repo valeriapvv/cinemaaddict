@@ -7,7 +7,8 @@ import MainFilmsBlockPresenter from './main-films-block-presenter.js';
 import TopRatedFilmsBlockView from '../../view/films-block-view/top-rated-films-block-view.js';
 import CommentedFilmsBlockView from '../../view/films-block-view/commented-films-block-view.js';
 import NoFilmsBlockView from '../../view/films-block-view/no-films-block-view.js';
-import {render} from '../../framework/render.js';
+import {render, replace} from '../../framework/render.js';
+import {SortType} from '../../data/constants.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
@@ -19,6 +20,9 @@ export default class FilmsPresenter {
 
   #filtersModel = null;
   #filters = null;
+
+  #sortComponent = null;
+  #currentSortType = SortType.Default;
 
   #popupPresenter = null;
 
@@ -40,7 +44,7 @@ export default class FilmsPresenter {
     this.#filters = this.#filtersModel.filters;
     this.#renderFilters();
 
-    this.#renderSort();
+    this.#initSort();
 
     this.#renderContainer();
 
@@ -114,7 +118,34 @@ export default class FilmsPresenter {
 
   // Sort
 
-  #renderSort() {
-    render(new SortView(), this.#parentElement);
+  #initSort() {
+    const prevSortComponent = this.#sortComponent;
+
+    this.#sortComponent = new SortView({
+      sortType: SortType,
+      currentSortType: this.#currentSortType,
+    });
+    this.#sortComponent.setChange(this.#onSortChange);
+
+    if (prevSortComponent === null) {
+      render(this.#sortComponent, this.#parentElement);
+      return;
+    }
+
+    replace(this.#sortComponent, prevSortComponent);
   }
+
+  #onSortChange = (sortType) => {
+    if (sortType === this.#currentSortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+    this.#initSort();
+
+    // eslint-disable-next-line no-console
+    console.log(sortType);
+
+    // TODO: Перерисовать список фильмов
+  };
 }

@@ -1,7 +1,14 @@
-export const getSortTemplate = () => `
+export const getSortTemplate = (sortType, currentSortType) => `
   <ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
+    ${Object.values(sortType).map((type) => `
+      <li>
+        <a href="#"
+          class="sort__button ${type === currentSortType ? 'sort__button--active' : ''}"
+          data-sort-type="${type}"
+        >
+          Sort by ${type.toLowerCase()}
+        </a>
+      </li>
+    `).join('')}
   </ul>
 `;
