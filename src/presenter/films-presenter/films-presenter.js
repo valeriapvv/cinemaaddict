@@ -1,3 +1,5 @@
+import FiltersView from '../../view/filters-view/filters-view.js';
+import SortView from '../../view/sort-view/sort-view.js';
 import FilmsSectionView from '../../view/films-section-view/films-section-view.js';
 import FilmsBlockView from '../../view/films-block-view/films-block-view.js';
 import FilmsBlockPresenter from './films-block-presenter.js';
@@ -15,21 +17,31 @@ export default class FilmsPresenter {
 
   #filmsModel = null;
 
+  #filtersModel = null;
+  #filters = null;
+
   #popupPresenter = null;
 
-  #containerComponent = null;
+  #filmsSectionComponent = null;
 
   constructor({
     parentElement,
     filmsModel,
+    filtersModel,
     popupPresenter,
   }) {
     this.#parentElement = parentElement;
     this.#filmsModel = filmsModel;
+    this.#filtersModel = filtersModel;
     this.#popupPresenter = popupPresenter;
   }
 
   init() {
+    this.#filters = this.#filtersModel.filters;
+    this.#renderFilters();
+
+    this.#renderSort();
+
     this.#renderContainer();
 
     if (!this.#filmsModel.films.length) {
@@ -42,18 +54,24 @@ export default class FilmsPresenter {
     this.#initCommentedFilms();
   }
 
+  // Films Section
+
   #renderContainer() {
-    this.#containerComponent = new FilmsSectionView();
-    render(this.#containerComponent, this.#parentElement);
+    this.#filmsSectionComponent = new FilmsSectionView();
+    render(this.#filmsSectionComponent, this.#parentElement);
   }
 
+  // No Films
+
   #renderNoFilmsBlock() {
-    render(new NoFilmsBlockView(), this.#containerComponent.element);
+    render(new NoFilmsBlockView(), this.#filmsSectionComponent.element);
   }
+
+  // Main Films
 
   #initMainFilms() {
     const mainFilmsPresenter = new MainFilmsBlockPresenter({
-      parentElement: this.#containerComponent.element,
+      parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
       blockComponent: new FilmsBlockView(),
@@ -62,9 +80,11 @@ export default class FilmsPresenter {
     mainFilmsPresenter.init();
   }
 
+  // Top Rated Films
+
   #initTopRatedFilms() {
     const topRatedFilmsPresenter = new FilmsBlockPresenter({
-      parentElement: this.#containerComponent.element,
+      parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
       blockComponent: new TopRatedFilmsBlockView(),
@@ -73,14 +93,28 @@ export default class FilmsPresenter {
     topRatedFilmsPresenter.init();
   }
 
+  // Commented Films
+
   #initCommentedFilms() {
     const commentedFilmsPresenter = new FilmsBlockPresenter({
-      parentElement: this.#containerComponent.element,
+      parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
       blockComponent: new CommentedFilmsBlockView(),
       itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
     });
     commentedFilmsPresenter.init();
+  }
+
+  // Filters
+
+  #renderFilters() {
+    render(new FiltersView(this.#filters), this.#parentElement);
+  }
+
+  // Sort
+
+  #renderSort() {
+    render(new SortView(), this.#parentElement);
   }
 }

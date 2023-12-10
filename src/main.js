@@ -3,7 +3,6 @@ import CommentsModel from './model/comments-model.js';
 import FiltersModel from './model/filters-model.js';
 import HeaderPresenter from './presenter/header-presenter/header-presenter.js';
 import FilmsPresenter from './presenter/films-presenter/films-presenter.js';
-import {MainScreenPresenter} from './presenter/main-screen-persenter/main-screen-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter/films-count-presenter.js';
 import PopupPresenter from './presenter/popup-presenter/popup-presenter.js';
 import {ContainerSelector, HIDE_OVERFLOW_CLASS_NAME} from './data/constants.js';
@@ -38,15 +37,10 @@ const popupPresenter = new PopupPresenter({
   onClosePopup,
 });
 
-const mainScreenPresenter = new MainScreenPresenter({
-  parentElement: mainContainer,
-  filtersModel,
-});
-mainScreenPresenter.init();
-
 const filmsPresenter = new FilmsPresenter({
   parentElement: mainContainer,
   filmsModel,
+  filtersModel,
   popupPresenter,
 });
 filmsPresenter.init();
