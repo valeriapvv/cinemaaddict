@@ -1,5 +1,5 @@
 import FilmCardView from '../../view/film-card-view/film-card-view.js';
-import {render, replace} from '../../framework/render.js';
+import {remove, render, replace} from '../../framework/render.js';
 
 export default class FilmCardPresenter {
   #parentElement = null;
@@ -40,6 +40,11 @@ export default class FilmCardPresenter {
     }
 
     replace(this.#cardComponent, prevComponent);
+  }
+
+  destroy() {
+    remove(this.#cardComponent);
+    this.#cardComponent = null;
   }
 
   #setHandlers() {

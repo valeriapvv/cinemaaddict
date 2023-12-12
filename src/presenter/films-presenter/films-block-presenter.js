@@ -11,6 +11,8 @@ export default class FilmsBlockPresenter {
 
   #filmPresenterMap = new Map();
 
+  #isFilmsBlockMounted = false;
+
   constructor({
     parentElement,
     filmsModel,
@@ -25,15 +27,32 @@ export default class FilmsBlockPresenter {
     this._itemsCountToShow = itemsCountToShow;
   }
 
-  init() {
-    this._films = this._filmsModel.films;
+  init(films) {
+    this._films = films || this._filmsModel.films;
     this._filmsCount = this._films.length;
+
+    if (!this.#isFilmsBlockMounted) {
+      this.#renderFilmsBlock();
+    }
+
+    this.#clearFilms();
+    this._renderFilms(0, this._itemsCountToShow);
+  }
+
+  #renderFilmsBlock() {
     this._filmsListComponent = new FilmsListView();
 
     render(this._blockComponent, this.#parentElement);
     render(this._filmsListComponent, this._blockComponent.element);
 
-    this._renderFilms(0, this._itemsCountToShow);
+    this.#isFilmsBlockMounted = true;
+  }
+
+  #clearFilms() {
+    this.#filmPresenterMap
+      .forEach((filmPresenter) => filmPresenter.destroy());
+
+    this.#filmPresenterMap.clear();
   }
 
   _renderFilms(from, to) {

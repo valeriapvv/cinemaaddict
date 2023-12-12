@@ -6,8 +6,8 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   #showMoreButtonComponent = null;
   #renderedFilmsCount = null;
 
-  init() {
-    super.init();
+  init(films) {
+    super.init(films);
 
     this.#renderedFilmsCount = this._itemsCountToShow;
 
@@ -19,6 +19,8 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   // Show More Button
 
   #renderShowMoreButton() {
+    remove(this.#showMoreButtonComponent);
+
     this.#showMoreButtonComponent = new ShowMoreButtonView();
     this.#showMoreButtonComponent.setClick(this.#onShowMoreButtonClick);
 

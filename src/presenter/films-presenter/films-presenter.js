@@ -13,6 +13,28 @@ import {SortType} from '../../data/constants.js';
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
 
+// TODO: перенести код сортировки в utils
+
+const byDate = (filmA, filmB) => {
+  const dateA = new Date(filmA.filmInfo.release.date);
+  const dateB = new Date(filmB.filmInfo.release.date);
+
+  return dateB - dateA;
+};
+
+const byRating = (filmA, filmB) => {
+  const ratingA = filmA.filmInfo.totalRating;
+  const ratingB = filmB.filmInfo.totalRating;
+
+  return ratingB - ratingA;
+};
+
+const sortFilms = {
+  [SortType.Default]: (films) => films,
+  [SortType.Date]: (films) => films.sort(byDate),
+  [SortType.Rating]: (films) => films.sort(byRating),
+};
+
 export default class FilmsPresenter {
   #parentElement = null;
 
@@ -24,6 +46,7 @@ export default class FilmsPresenter {
   #sortComponent = null;
   #currentSortType = SortType.Default;
 
+  #mainFilmsPresenter = null;
   #popupPresenter = null;
 
   #filmsSectionComponent = null;
@@ -48,12 +71,14 @@ export default class FilmsPresenter {
 
     this.#renderContainer();
 
-    if (!this.#filmsModel.films.length) {
+    const films = this.#getFilms();
+
+    if (!films.length) {
       this.#renderNoFilmsBlock();
       return;
     }
 
-    this.#initMainFilms();
+    this.#initMainFilms(films);
     this.#initTopRatedFilms();
     this.#initCommentedFilms();
   }
@@ -73,15 +98,16 @@ export default class FilmsPresenter {
 
   // Main Films
 
-  #initMainFilms() {
-    const mainFilmsPresenter = new MainFilmsBlockPresenter({
+  #initMainFilms(films) {
+    this.#mainFilmsPresenter = this.#mainFilmsPresenter || new MainFilmsBlockPresenter({
       parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
       blockComponent: new FilmsBlockView(),
       itemsCountToShow: MAIN_FILMS_COUNT_TO_SHOW,
     });
-    mainFilmsPresenter.init();
+
+    this.#mainFilmsPresenter.init(films);
   }
 
   // Top Rated Films
@@ -143,9 +169,12 @@ export default class FilmsPresenter {
     this.#currentSortType = sortType;
     this.#initSort();
 
-    // eslint-disable-next-line no-console
-    console.log(sortType);
-
-    // TODO: Перерисовать список фильмов
+    this.#initMainFilms(this.#getFilms());
   };
+
+  #getFilms() {
+    const sourcedFilms = this.#filmsModel.films;
+
+    return sortFilms[this.#currentSortType](sourcedFilms);
+  }
 }
