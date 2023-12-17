@@ -13,22 +13,26 @@ export default class FilmsBlockPresenter {
 
   #isFilmsBlockMounted = false;
 
+  #getFilms = null;
+
   constructor({
     parentElement,
     filmsModel,
     popupPresenter,
     blockComponent,
     itemsCountToShow,
+    getFilms,
   }) {
     this.#parentElement = parentElement;
     this._filmsModel = filmsModel;
     this.#popupPresenter = popupPresenter;
     this._blockComponent = blockComponent;
     this._itemsCountToShow = itemsCountToShow;
+    this.#getFilms = getFilms;
   }
 
-  init(films) {
-    this._films = films || this._filmsModel.films;
+  init() {
+    this._films = this.#getFilms();
     this._filmsCount = this._films.length;
 
     if (!this.#isFilmsBlockMounted) {
@@ -132,7 +136,7 @@ export default class FilmsBlockPresenter {
 
   #updateFilm(updatedFilm) {
     this._filmsModel.update(updatedFilm);
-    this._films = this._filmsModel.films;
+    this._films = this.#getFilms();
 
     this.#redrawFilmCard(updatedFilm);
     this.#popupPresenter.update(updatedFilm);

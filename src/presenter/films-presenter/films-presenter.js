@@ -71,14 +71,14 @@ export default class FilmsPresenter {
 
     this.#renderContainer();
 
-    const films = this.#getFilms();
+    const films = this.#getFilmsBySort();
 
     if (!films.length) {
       this.#renderNoFilmsBlock();
       return;
     }
 
-    this.#initMainFilms(films);
+    this.#initMainFilms();
     this.#initTopRatedFilms();
     this.#initCommentedFilms();
   }
@@ -98,16 +98,17 @@ export default class FilmsPresenter {
 
   // Main Films
 
-  #initMainFilms(films) {
+  #initMainFilms() {
     this.#mainFilmsPresenter = this.#mainFilmsPresenter || new MainFilmsBlockPresenter({
       parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
       blockComponent: new FilmsBlockView(),
       itemsCountToShow: MAIN_FILMS_COUNT_TO_SHOW,
+      getFilms: this.#getFilmsBySort,
     });
 
-    this.#mainFilmsPresenter.init(films);
+    this.#mainFilmsPresenter.init();
   }
 
   // Top Rated Films
@@ -119,6 +120,7 @@ export default class FilmsPresenter {
       popupPresenter: this.#popupPresenter,
       blockComponent: new TopRatedFilmsBlockView(),
       itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
+      getFilms: this.#getFilmsBySort,
     });
     topRatedFilmsPresenter.init();
   }
@@ -132,6 +134,7 @@ export default class FilmsPresenter {
       popupPresenter: this.#popupPresenter,
       blockComponent: new CommentedFilmsBlockView(),
       itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
+      getFilms: this.#getFilmsBySort,
     });
     commentedFilmsPresenter.init();
   }
@@ -169,12 +172,12 @@ export default class FilmsPresenter {
     this.#currentSortType = sortType;
     this.#initSort();
 
-    this.#initMainFilms(this.#getFilms());
+    this.#initMainFilms(this.#getFilmsBySort());
   };
 
-  #getFilms() {
-    const sourcedFilms = this.#filmsModel.films;
-
-    return sortFilms[this.#currentSortType](sourcedFilms);
+  #getSourcedFilms() {
+    return this.#filmsModel.films;
   }
+
+  #getFilmsBySort = () => sortFilms[this.#currentSortType](this.#getSourcedFilms());
 }

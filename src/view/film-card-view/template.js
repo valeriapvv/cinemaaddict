@@ -11,6 +11,8 @@ export const ADD_TO_FAVORITES_CLASS_NAME = 'film-card__controls-item--favorite';
 export const getFilmCardTemplate = (film) => {
   const CONTROL_ACTIVE_CLASS_NAME = 'film-card__controls-item--active';
 
+  const {id, filmInfo, userDetails, comments} = film;
+
   const {
     title,
     totalRating,
@@ -21,22 +23,22 @@ export const getFilmCardTemplate = (film) => {
     genre,
     poster,
     description,
-  } = film.filmInfo;
+  } = filmInfo;
 
   const {
     watchlist,
     alreadyWatched,
     favorite,
-  } = film.userDetails;
+  } = userDetails;
 
-  const commentsCount = film.comments.length;
+  const commentsCount = comments.length;
 
   const year = new Date(date).getFullYear();
 
   const duration = formatMinutes(runtime);
 
   return (`
-    <article class="film-card">
+    <article class="film-card" data-film-id="${id}">
       <a class="${FILM_LINK_CLASS_NAME}">
         <h3 class="film-card__title">${title}</h3>
         <p class="film-card__rating">${totalRating}</p>
