@@ -30,3 +30,5 @@ export const createUniqueIntegerGenerator = (min, max) => {
     return integer;
   };
 };
+
+export const createNextIntegerGenerator = (from = 1) => () => from++;

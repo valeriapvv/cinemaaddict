@@ -2,6 +2,7 @@ import {faker} from '@faker-js/faker';
 import {
   getRandomBoolean,
   createUniqueIntegerGenerator,
+  createNextIntegerGenerator,
 } from './utils.js';
 import {createCommentsIdsGenerator} from './data-generation.js';
 import {
@@ -23,7 +24,7 @@ const {
   location,
 } = faker;
 
-const getFilmId = createUniqueIntegerGenerator(1, FILMS_COUNT);
+const getFilmId = createNextIntegerGenerator();
 
 const getCommentId = createCommentsIdsGenerator();
 

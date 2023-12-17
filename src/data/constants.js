@@ -11,6 +11,12 @@ export const FilterType = {
   Favorites: 'favorites',
 };
 
+export const SortType = {
+  Default: 'default',
+  Date: 'date',
+  Rating: 'rating',
+};
+
 export const HIDE_OVERFLOW_CLASS_NAME = 'hide-overflow';
 
 export const FILMS_BLOCK_SECONDARY_CLASS_NAME = 'films-list--extra';

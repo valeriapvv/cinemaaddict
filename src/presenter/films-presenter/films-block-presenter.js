@@ -11,29 +11,52 @@ export default class FilmsBlockPresenter {
 
   #filmPresenterMap = new Map();
 
+  #isFilmsBlockMounted = false;
+
+  #getFilms = null;
+
   constructor({
     parentElement,
     filmsModel,
     popupPresenter,
     blockComponent,
     itemsCountToShow,
+    getFilms,
   }) {
     this.#parentElement = parentElement;
     this._filmsModel = filmsModel;
     this.#popupPresenter = popupPresenter;
     this._blockComponent = blockComponent;
     this._itemsCountToShow = itemsCountToShow;
+    this.#getFilms = getFilms;
   }
 
   init() {
-    this._films = this._filmsModel.films;
+    this._films = this.#getFilms();
     this._filmsCount = this._films.length;
+
+    if (!this.#isFilmsBlockMounted) {
+      this.#renderFilmsBlock();
+    }
+
+    this.#clearFilms();
+    this._renderFilms(0, this._itemsCountToShow);
+  }
+
+  #renderFilmsBlock() {
     this._filmsListComponent = new FilmsListView();
 
     render(this._blockComponent, this.#parentElement);
     render(this._filmsListComponent, this._blockComponent.element);
 
-    this._renderFilms(0, this._itemsCountToShow);
+    this.#isFilmsBlockMounted = true;
+  }
+
+  #clearFilms() {
+    this.#filmPresenterMap
+      .forEach((filmPresenter) => filmPresenter.destroy());
+
+    this.#filmPresenterMap.clear();
   }
 
   _renderFilms(from, to) {
@@ -113,7 +136,7 @@ export default class FilmsBlockPresenter {
 
   #updateFilm(updatedFilm) {
     this._filmsModel.update(updatedFilm);
-    this._films = this._filmsModel.films;
+    this._films = this.#getFilms();
 
     this.#redrawFilmCard(updatedFilm);
     this.#popupPresenter.update(updatedFilm);

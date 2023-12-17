@@ -16,7 +16,11 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
     }
   }
 
+  // Show More Button
+
   #renderShowMoreButton() {
+    remove(this.#showMoreButtonComponent);
+
     this.#showMoreButtonComponent = new ShowMoreButtonView();
     this.#showMoreButtonComponent.setClick(this.#onShowMoreButtonClick);
 
@@ -36,6 +40,8 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
       this.#showMoreButtonComponent = null;
     }
   };
+
+  // All Films Rendered
 
   #isAllFilmsRendered() {
     return this.#renderedFilmsCount >= this._filmsCount;
