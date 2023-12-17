@@ -35,21 +35,21 @@ export default class FilmsBlockPresenter {
     this._films = this.#getFilms();
     this._filmsCount = this._films.length;
 
+    this.#initFilmsBlock();
+  }
+
+  #initFilmsBlock() {
     if (!this.#isFilmsBlockMounted) {
-      this.#renderFilmsBlock();
+      this._filmsListComponent = new FilmsListView();
+
+      render(this._blockComponent, this.#parentElement);
+      render(this._filmsListComponent, this._blockComponent.element);
+
+      this.#isFilmsBlockMounted = true;
     }
 
     this.#clearFilms();
     this._renderFilms(0, this._itemsCountToShow);
-  }
-
-  #renderFilmsBlock() {
-    this._filmsListComponent = new FilmsListView();
-
-    render(this._blockComponent, this.#parentElement);
-    render(this._filmsListComponent, this._blockComponent.element);
-
-    this.#isFilmsBlockMounted = true;
   }
 
   #clearFilms() {
