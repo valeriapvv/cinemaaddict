@@ -72,6 +72,7 @@ export default class FilmsBlockPresenter {
       onAddToWatchlistClick: this.#onAddToWatchlistClick,
       onAlreadyWatchedClick: this.#onAlreadyWatchedClick,
       onFavoriteClick: this.#onFavoriteClick,
+      onDestroy: this.#onFilmPresenterDestroy,
     });
     filmCardPresenter.init(film);
 
@@ -132,6 +133,10 @@ export default class FilmsBlockPresenter {
     };
 
     this.#updateFilm(updatedFilm);
+  };
+
+  #onFilmPresenterDestroy = () => {
+    this.#popupPresenter.destroy();
   };
 
   #updateFilm(updatedFilm) {

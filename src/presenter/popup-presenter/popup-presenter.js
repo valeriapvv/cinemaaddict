@@ -58,7 +58,7 @@ export default class PopupPresenter {
   }
 
   #setInnerEventHandlers() {
-    this.#popupComponent.setClose(this.#onClose);
+    this.#popupComponent.setClose(this.destroy);
 
     if (this.#onAddToWatchlistClick) {
       this.#popupComponent.setAddToWatchlistClick(this.#onAddToWatchlistClick);
@@ -79,7 +79,7 @@ export default class PopupPresenter {
     }
   }
 
-  #onClose = () => {
+  destroy = () => {
     this.#removeComponent();
     this.#onClosePopup();
   };
