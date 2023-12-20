@@ -25,14 +25,13 @@ export default class SortView extends AbstractView {
   }
 
   #onClick = (evt) => {
-    evt.preventDefault();
-
     const sortElement = evt.target.closest('[data-sort-type]');
 
     if (!sortElement) {
       return;
     }
 
+    evt.preventDefault();
     this._callback.click(sortElement.dataset.sortType);
   };
 }
