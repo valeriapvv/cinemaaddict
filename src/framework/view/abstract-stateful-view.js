@@ -18,6 +18,7 @@ export default class AbstractStatefulView extends AbstractView {
 
     this._setState(update);
 
+    // TODO: позиция скролла не должна изменяться
     this.#rerenderElement();
   };
 
