@@ -92,7 +92,6 @@ export default class PopupPresenter {
     }
 
     this.#popupComponent.updateElement({film});
-    this.#setEventHandlers();
   }
 
   destroy = () => {

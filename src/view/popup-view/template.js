@@ -4,9 +4,9 @@ import {EMOTIONS} from '../../data/constants.js';
 
 export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';
 
-export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-details__control-button--add-to-watchlist';
+export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-details__control-button--watchlist';
 
-export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--mark-as-watched';
+export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--watched';
 
 export const ADD_TO_FAVORITES_CLASS_NAME = 'film-details__control-button--favorite';
 

@@ -12,6 +12,8 @@ import {
 // TODO: Повторяется код FilmCardView по навешиванию обработчиков
 
 export default class PopupView extends AbstractStatefulView {
+  #textareaElement = null;
+
   constructor(film, comments) {
     super();
 
@@ -34,26 +36,40 @@ export default class PopupView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+
+    this.setAddToWatchlistClick(this._callback.addToWatchlistClick);
+    this.setAlreadyWatchedClick(this._callback.alreadyWatchedClick);
+    this.setFavoriteClick(this._callback.favoriteClick);
+    this.setClose(this._callback.close);
   };
 
   #setInnerHandlers() {
     this.#setEmotionChange();
-    this.#setCommentChange();
+    this.#setCommentInput();
   }
 
-  #setCommentChange() {
-    const textareaElement = this.element.querySelector(`.${COMMENT_INPUT_CLASS_NAME}`);
-    textareaElement.addEventListener('change', this.#onCommentChange);
+  #setCommentInput() {
+    this.#textareaElement = this.element.querySelector(`.${COMMENT_INPUT_CLASS_NAME}`);
+
+    // TODO: сделать обертку debounce(f, ms)
+    this.#textareaElement.addEventListener('input', this.#onCommentInput);
   }
 
-  #onCommentChange = (evt) => {
-    // TODO: Должна быть перерисовка
-    this._setState({
+  #onCommentInput = ({target}) => {
+    const {value} = target;
+    const selectionStart = target.selectionStart;
+
+    this.updateElement({
       newComment: {
         ...this._state.newComment,
-        comment: evt.target.value,
+        comment: value,
       },
     });
+
+    // TODO: нет возможности "откатить" ввод с помощью Command/Ctrl + Z
+    // TODO: при фокусе с помощью Tab курсор в установлен ПЕРЕД введенной строкой
+    this.#textareaElement.focus();
+    this.#textareaElement.setSelectionRange(selectionStart, selectionStart);
   };
 
   #setEmotionChange() {
@@ -62,8 +78,7 @@ export default class PopupView extends AbstractStatefulView {
   }
 
   #onEmotionChange = (evt) => {
-    // TODO: Должна быть перерисовка
-    this._setState({
+    this.updateElement({
       newComment: {
         ...this._state.newComment,
         emotion: evt.target.value,
