@@ -18,6 +18,7 @@ export default class AbstractStatefulView extends AbstractView {
 
     this._setState(update);
 
+    // TODO: позиция скролла не должна изменяться
     this.#rerenderElement();
   };
 
@@ -41,12 +42,23 @@ export default class AbstractStatefulView extends AbstractView {
   #rerenderElement = () => {
     const prevElement = this.element;
     const parent = prevElement.parentElement;
+
+    const scrollPosition = {
+      top: prevElement.scrollTop,
+      left: prevElement.scrollLeft,
+    };
+
     this.removeElement();
 
     const newElement = this.element;
 
     parent.replaceChild(newElement, prevElement);
+    this.#setElementScrollPosition(scrollPosition);
 
     this._restoreHandlers();
   };
+
+  #setElementScrollPosition({top, left}) {
+    this.element.scrollTo({top, left});
+  }
 }

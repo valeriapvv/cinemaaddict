@@ -1,27 +1,90 @@
-import AbstractView from '../../framework/view/abstract-view.js';
+import AbstractStatefulView from '../../framework/view/abstract-stateful-view.js';
 import {
   CLOSE_BUTTON_CLASS_NAME,
   ADD_TO_FAVORITES_CLASS_NAME,
   ADD_TO_WATCHLIST_CLASS_NAME,
   ALREADY_WATCHED_CLASS_NAME,
+  COMMENT_INPUT_CLASS_NAME,
+  EMOJI_LIST_CLASS_NAME,
   getPopupTemplate,
 } from './template.js';
 
 // TODO: Повторяется код FilmCardView по навешиванию обработчиков
 
-export default class PopupView extends AbstractView {
-  #film = null;
-  #comments = null;
+export default class PopupView extends AbstractStatefulView {
+  #textareaElement = null;
 
   constructor(film, comments) {
     super();
-    this.#film = film;
-    this.#comments = comments;
+
+    // TODO: Убрать лишнее из состояния?
+    this._setState({
+      film,
+      comments,
+      newComment: {
+        comment: null,
+        emotion: null,
+      },
+    });
+
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return getPopupTemplate(this.#film, this.#comments);
+    return getPopupTemplate(this._state);
   }
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+
+    this.setAddToWatchlistClick(this._callback.addToWatchlistClick);
+    this.setAlreadyWatchedClick(this._callback.alreadyWatchedClick);
+    this.setFavoriteClick(this._callback.favoriteClick);
+    this.setClose(this._callback.close);
+  };
+
+  #setInnerHandlers() {
+    this.#setEmotionChange();
+    this.#setCommentInput();
+  }
+
+  #setCommentInput() {
+    this.#textareaElement = this.element.querySelector(`.${COMMENT_INPUT_CLASS_NAME}`);
+
+    // TODO: сделать обертку debounce(f, ms)
+    this.#textareaElement.addEventListener('input', this.#onCommentInput);
+  }
+
+  #onCommentInput = ({target}) => {
+    const {value} = target;
+    const selectionStart = target.selectionStart;
+
+    this.updateElement({
+      newComment: {
+        ...this._state.newComment,
+        comment: value,
+      },
+    });
+
+    // TODO: нет возможности "откатить" ввод с помощью Command/Ctrl + Z
+    // TODO: при фокусе с помощью Tab курсор в установлен ПЕРЕД введенной строкой
+    this.#textareaElement.focus();
+    this.#textareaElement.setSelectionRange(selectionStart, selectionStart);
+  };
+
+  #setEmotionChange() {
+    const emotionsListElement = this.element.querySelector(`.${EMOJI_LIST_CLASS_NAME}`);
+    emotionsListElement.addEventListener('change', this.#onEmotionChange);
+  }
+
+  #onEmotionChange = (evt) => {
+    this.updateElement({
+      newComment: {
+        ...this._state.newComment,
+        emotion: evt.target.value,
+      },
+    });
+  };
 
   // onClose
 
@@ -32,11 +95,11 @@ export default class PopupView extends AbstractView {
 
     // TODO: закрытие по клику вне попапа
 
-    closeButton.addEventListener('click', this.#onClick);
+    closeButton.addEventListener('click', this.#onCloseClick);
     document.addEventListener('keydown', this.#onEscKeydown);
   }
 
-  #onClick = () => {
+  #onCloseClick = () => {
     this._callback.close();
   };
 
@@ -58,7 +121,7 @@ export default class PopupView extends AbstractView {
 
   #onAddToWatchlistClick = (evt) => {
     evt.preventDefault();
-    this._callback.addToWatchlistClick(this.#film);
+    this._callback.addToWatchlistClick(this._state.film);
   };
 
   // Already watched click
@@ -72,7 +135,7 @@ export default class PopupView extends AbstractView {
 
   #onAlreadyWatchedClick = (evt) => {
     evt.preventDefault();
-    this._callback.alreadyWatchedClick(this.#film);
+    this._callback.alreadyWatchedClick(this._state.film);
   };
 
   // Favorite click
@@ -86,7 +149,7 @@ export default class PopupView extends AbstractView {
 
   #onFavoriteClick = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteClick(this.#film);
+    this._callback.favoriteClick(this._state.film);
   };
 
   #removeHandlers = () => {

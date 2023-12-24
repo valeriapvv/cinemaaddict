@@ -9,6 +9,7 @@ export default class FilmCardPresenter {
   #onAddToWatchlistClick = null;
   #onAlreadyWatchedClick = null;
   #onFavoriteClick = null;
+  #onDestroy = null;
 
   #film = null;
 
@@ -18,12 +19,14 @@ export default class FilmCardPresenter {
     onAddToWatchlistClick,
     onAlreadyWatchedClick,
     onFavoriteClick,
+    onDestroy,
   }) {
     this.#parentElement = parentElement;
     this.#onCardClick = onCardClick;
     this.#onAddToWatchlistClick = onAddToWatchlistClick;
     this.#onAlreadyWatchedClick = onAlreadyWatchedClick;
     this.#onFavoriteClick = onFavoriteClick;
+    this.#onDestroy = onDestroy;
   }
 
   init(film) {
@@ -43,6 +46,8 @@ export default class FilmCardPresenter {
   }
 
   destroy() {
+    this.#onDestroy();
+
     remove(this.#cardComponent);
     this.#cardComponent = null;
   }

@@ -2,6 +2,8 @@ import PopupView from '../../view/popup-view/popup-view.js';
 import {remove, render, replace} from '../../framework/render.js';
 
 export default class PopupPresenter {
+  #filmId = null;
+
   #parentElement = null;
   #popupComponent = null;
 
@@ -26,14 +28,20 @@ export default class PopupPresenter {
   }
 
   init(film) {
+    if (this.#filmId === film.id) {
+      return;
+    }
+
+    this.#filmId = film.id;
+
+    this.#onShowPopup();
+
     const prevComponent = this.#popupComponent;
 
     const comments = this.#commentsModel.getCommentsById(film.comments);
 
     this.#popupComponent = new PopupView(film, comments);
-    this.#setInnerEventHandlers();
-
-    this.#onShowPopup();
+    this.#setEventHandlers();
 
     if (prevComponent === null) {
       render(
@@ -57,8 +65,8 @@ export default class PopupPresenter {
     this.#onFavoriteClick = onFavoriteClick;
   }
 
-  #setInnerEventHandlers() {
-    this.#popupComponent.setClose(this.#onClose);
+  #setEventHandlers() {
+    this.#popupComponent.setClose(this.destroy);
 
     if (this.#onAddToWatchlistClick) {
       this.#popupComponent.setAddToWatchlistClick(this.#onAddToWatchlistClick);
@@ -74,20 +82,26 @@ export default class PopupPresenter {
   }
 
   update(film) {
-    if (this.#popupComponent) {
-      this.init(film);
+    if (!this.#popupComponent) {
+      return;
     }
+
+    if (this.#filmId !== film.id) {
+      // this.init(film);
+      return;
+    }
+
+    this.#popupComponent.updateElement({film});
   }
 
-  #onClose = () => {
+  destroy = () => {
     this.#removeComponent();
     this.#onClosePopup();
   };
 
   #removeComponent() {
-    if (this.#popupComponent) {
-      remove(this.#popupComponent);
-      this.#popupComponent = null;
-    }
+    remove(this.#popupComponent);
+    this.#popupComponent = null;
+    this.#filmId = null;
   }
 }

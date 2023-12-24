@@ -4,11 +4,15 @@ import {EMOTIONS} from '../../data/constants.js';
 
 export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';
 
-export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-details__control-button--add-to-watchlist';
+export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-details__control-button--watchlist';
 
-export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--mark-as-watched';
+export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--watched';
 
 export const ADD_TO_FAVORITES_CLASS_NAME = 'film-details__control-button--favorite';
+
+export const COMMENT_INPUT_CLASS_NAME = 'film-details__comment-input';
+
+export const EMOJI_LIST_CLASS_NAME = 'film-details__emoji-list';
 
 const getPosterTemplate = ({poster, ageRating}) => (`
     <div class="film-details__poster">
@@ -161,23 +165,39 @@ const getCommentTemplate = ({
   </li>
 `);
 
-const getCommentsListTemplate = ({comments}) => (`
+const getCommentsListTemplate = (comments) => (`
     <ul class="film-details__comments-list">
       ${comments.map(getCommentTemplate).join('')}
     </ul>
   `);
 
-const getNewCommentBlockTemplate = () => (`
+const getNewCommentBlockTemplate = ({
+  comment,
+  emotion: currentEmotion,
+} = {}) => (`
     <div class="film-details__new-comment">
       <div class="film-details__add-emoji-label"></div>
 
       <label class="film-details__comment-label">
-        <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+        <textarea
+          class="${COMMENT_INPUT_CLASS_NAME}"
+          placeholder="Select reaction below and write comment here"
+          name="comment"
+        >${
+  comment || ''
+  }</textarea>
       </label>
 
-      <div class="film-details__emoji-list">
+      <div class="${EMOJI_LIST_CLASS_NAME}">
         ${EMOTIONS.map((emotion) => `
-          <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}">
+          <input
+            class="film-details__emoji-item visually-hidden"
+            name="comment-emoji"
+            type="radio"
+            id="emoji-${emotion}"
+            value="${emotion}"
+            ${emotion === currentEmotion ? 'checked' : ''}
+          >
           <label class="film-details__emoji-label" for="emoji-${emotion}">
             <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
           </label>
@@ -186,7 +206,11 @@ const getNewCommentBlockTemplate = () => (`
     </div>
  `);
 
-export const getPopupTemplate = (film, comments) => {
+export const getPopupTemplate = ({
+  film,
+  comments,
+  newComment,
+}) => {
   const {description} = film.filmInfo;
 
   const commentsCount = film.comments.length;
@@ -223,9 +247,9 @@ export const getPopupTemplate = (film, comments) => {
               Comments <span class="film-details__comments-count">${commentsCount}</span>
             </h3>
 
-            ${getCommentsListTemplate({comments})}
+            ${getCommentsListTemplate(comments)}
 
-            ${getNewCommentBlockTemplate()}
+            ${getNewCommentBlockTemplate(newComment)}
           </section>
         </div>
       </form>
