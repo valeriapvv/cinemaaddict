@@ -1,4 +1,3 @@
-import FiltersView from '../../view/filters-view/filters-view.js';
 import SortView from '../../view/sort-view/sort-view.js';
 import FilmsSectionView from '../../view/films-section-view/films-section-view.js';
 import FilmsBlockView from '../../view/films-block-view/films-block-view.js';
@@ -7,7 +6,7 @@ import MainFilmsBlockPresenter from './main-films-block-presenter.js';
 import TopRatedFilmsBlockView from '../../view/films-block-view/top-rated-films-block-view.js';
 import CommentedFilmsBlockView from '../../view/films-block-view/commented-films-block-view.js';
 import NoFilmsBlockView from '../../view/films-block-view/no-films-block-view.js';
-import {remove, render, replace} from '../../framework/render.js';
+import {render, replace} from '../../framework/render.js';
 import {SortType} from '../../data/constants.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
@@ -41,19 +40,17 @@ export default class FilmsPresenter {
   #parentElement = null;
 
   #filmsModel = null;
-
   #filtersModel = null;
-  #filters = null;
 
   #noFilmsComponent = null;
-  #filtersComponent = null;
+  #filmsSectionComponent = null;
   #sortComponent = null;
   #currentSortType = defaultSortType;
 
   #mainFilmsPresenter = null;
+  #topRatedFilmsPresenter = null;
+  #commentedFilmsPresenter = null;
   #popupPresenter = null;
-
-  #filmsSectionComponent = null;
 
   constructor({
     parentElement,
@@ -68,9 +65,14 @@ export default class FilmsPresenter {
   }
 
   init() {
-    this.#initFilters();
     this.#initSort();
-    this.#renderContainer();
+    this.#initFilms();
+  }
+
+  #initFilms = () => {
+    if (this.#filmsSectionComponent === null) {
+      this.#renderContainer();
+    }
 
     if (!this.#getFilms().length) {
       this.#renderNoFilmsBlock();
@@ -80,24 +82,7 @@ export default class FilmsPresenter {
     this.#initMainFilms();
     this.#initTopRatedFilms();
     this.#initCommentedFilms();
-  }
-
-  // Filters
-
-  #initFilters() {
-    // TODO: убрать реинициализацию?
-    const prevComponent = this.#filtersComponent;
-
-    this.#filters = this.#filtersModel.filters;
-    this.#filtersComponent = new FiltersView(this.#filters);
-
-    if (prevComponent === null) {
-      render(this.#filtersComponent, this.#parentElement);
-      return;
-    }
-
-    replace(this.#filtersComponent, prevComponent);
-  }
+  };
 
   // Sort
 
@@ -127,7 +112,7 @@ export default class FilmsPresenter {
     this.#currentSortType = sortType;
     this.#initSort();
 
-    this.#initMainFilms(this.#getFilms());
+    this.#initMainFilms();
   };
 
   // Films Section
@@ -162,7 +147,7 @@ export default class FilmsPresenter {
   // Top Rated Films
 
   #initTopRatedFilms() {
-    const topRatedFilmsPresenter = new FilmsBlockPresenter({
+    this.#topRatedFilmsPresenter = this.#topRatedFilmsPresenter || new FilmsBlockPresenter({
       parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
@@ -170,13 +155,13 @@ export default class FilmsPresenter {
       itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
       getFilms: this.#getFilms,
     });
-    topRatedFilmsPresenter.init();
+    this.#topRatedFilmsPresenter.init();
   }
 
   // Commented Films
 
   #initCommentedFilms() {
-    const commentedFilmsPresenter = new FilmsBlockPresenter({
+    this.#commentedFilmsPresenter = this.#commentedFilmsPresenter || new FilmsBlockPresenter({
       parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
       popupPresenter: this.#popupPresenter,
@@ -184,7 +169,7 @@ export default class FilmsPresenter {
       itemsCountToShow: SECONDARY_FILMS_COUNT_TO_SHOW,
       getFilms: this.#getFilms,
     });
-    commentedFilmsPresenter.init();
+    this.#commentedFilmsPresenter.init();
   }
 
   #getFilms = () => sortFilms[this.#currentSortType](this.#filmsModel.films);
