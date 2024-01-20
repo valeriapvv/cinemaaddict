@@ -35,8 +35,20 @@ export default class FilmsBlockPresenter {
     this._films = this.#getFilms();
     this._filmsCount = this._films.length;
 
+    this._filmsModel.addObserver(this.#handleFilmsModelEvent);
     this.#initFilmsBlock();
   }
+
+  #handleFilmsModelEvent = (_event, updatedFilm) => {
+    const filmCardPresenter = this.#filmPresenterMap.get(updatedFilm.id);
+
+    if (!filmCardPresenter) {
+      return;
+    }
+
+    filmCardPresenter.init(updatedFilm);
+    this.#popupPresenter.update(updatedFilm);
+  };
 
   #initFilmsBlock() {
     if (!this.#isFilmsBlockMounted) {
@@ -142,13 +154,5 @@ export default class FilmsBlockPresenter {
   #updateFilm(updatedFilm) {
     this._filmsModel.update(updatedFilm);
     this._films = this.#getFilms();
-
-    this.#redrawFilmCard(updatedFilm);
-    this.#popupPresenter.update(updatedFilm);
   }
-
-  #redrawFilmCard = (film) => {
-    const filmCardPresenter = this.#filmPresenterMap.get(film.id);
-    filmCardPresenter.init(film);
-  };
 }
