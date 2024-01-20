@@ -1,7 +1,8 @@
+import Observable from '../framework/observable.js';
 import {FILMS_COUNT} from '../mock/constants.js';
 import {generateFilm} from '../mock/film.js';
 
-export default class FilmsModel {
+export default class FilmsModel extends Observable {
   #films = null;
 
   get films() {
@@ -21,5 +22,7 @@ export default class FilmsModel {
       updatedFilm,
       ...prevFilms.slice(index + 1),
     ];
+
+    this._notify(null, updatedFilm);
   }
 }
