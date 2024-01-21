@@ -13,10 +13,3 @@ export const formatMinutes = (minutes) => {
 
   return `${hours}${hoursSign} ${restMinutes}${minutesSign}`;
 };
-
-// Film
-export const isInWatchlist = (film) => film.userDetails.watchlist;
-
-export const isInHistory = (film) => film.userDetails.alreadyWatched;
-
-export const isFavorite = (film) => film.userDetails.favorite;

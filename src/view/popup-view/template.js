@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {formatMinutes} from '../../utils.js';
+import {formatMinutes} from '../../utils/common.js';
 import {EMOTIONS} from '../../data/constants.js';
 
 export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';

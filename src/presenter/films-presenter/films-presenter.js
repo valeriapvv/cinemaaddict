@@ -8,31 +8,10 @@ import CommentedFilmsBlockView from '../../view/films-block-view/commented-films
 import NoFilmsBlockView from '../../view/films-block-view/no-films-block-view.js';
 import {render, replace} from '../../framework/render.js';
 import {SortType} from '../../data/constants.js';
+import {sortFilms} from '../../utils/sort.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
-
-// TODO: перенести код сортировки в utils
-
-const byDate = (filmA, filmB) => {
-  const dateA = new Date(filmA.filmInfo.release.date);
-  const dateB = new Date(filmB.filmInfo.release.date);
-
-  return dateB - dateA;
-};
-
-const byRating = (filmA, filmB) => {
-  const ratingA = filmA.filmInfo.totalRating;
-  const ratingB = filmB.filmInfo.totalRating;
-
-  return ratingB - ratingA;
-};
-
-const sortFilms = {
-  [SortType.Default]: (films) => films,
-  [SortType.Date]: (films) => films.sort(byDate),
-  [SortType.Rating]: (films) => films.sort(byRating),
-};
 
 const defaultSortType = SortType.Default;
 

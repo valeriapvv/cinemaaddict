@@ -1,4 +1,4 @@
-import {formatMinutes} from '../../utils.js';
+import {formatMinutes} from '../../utils/common.js';
 
 export const FILM_LINK_CLASS_NAME = 'film-card__link';
 
