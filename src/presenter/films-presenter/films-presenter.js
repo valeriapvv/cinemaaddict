@@ -9,6 +9,7 @@ import NoFilmsBlockView from '../../view/films-block-view/no-films-block-view.js
 import {render, replace} from '../../framework/render.js';
 import {SortType} from '../../data/constants.js';
 import {sortFilms} from '../../utils/sort.js';
+import {filter} from '../../utils/filter.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
@@ -114,6 +115,7 @@ export default class FilmsPresenter {
     this.#mainFilmsPresenter = this.#mainFilmsPresenter || new MainFilmsBlockPresenter({
       parentElement: this.#filmsSectionComponent.element,
       filmsModel: this.#filmsModel,
+      filtersModel: this.#filtersModel,
       popupPresenter: this.#popupPresenter,
       blockComponent: new FilmsBlockView(),
       itemsCountToShow: MAIN_FILMS_COUNT_TO_SHOW,
@@ -151,5 +153,16 @@ export default class FilmsPresenter {
     this.#commentedFilmsPresenter.init();
   }
 
-  #getFilms = () => sortFilms[this.#currentSortType](this.#filmsModel.films);
+  // Get Films
+
+  // FIXME: Большое количество повторных фильтраций/сортировок
+  // при вызове #getFilms в других презенторах
+  #getFilms = () => {
+    const films = this.#filmsModel.films;
+
+    const currentFilter = this.#filtersModel.activeFilter;
+    const filteredFilms = filter[currentFilter](films);
+
+    return sortFilms[this.#currentSortType](filteredFilms);
+  };
 }

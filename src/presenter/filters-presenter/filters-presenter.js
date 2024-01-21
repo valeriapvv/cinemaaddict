@@ -20,6 +20,7 @@ export default class FiltersPresenter {
 
   init() {
     this.#filmsModel.addObserver(this.#handleFilmsModelEvent);
+    this.#filtersModel.addObserver(this.#handleFiltersModelEvent);
     this.#initFilters();
   }
 
@@ -28,10 +29,18 @@ export default class FiltersPresenter {
     this.#initFilters();
   };
 
+  #handleFiltersModelEvent = () => {
+    this.#initFilters();
+  };
+
   #initFilters() {
     const prevComponent = this.#filtersComponent;
 
-    this.#filtersComponent = new FiltersView(this.#getFilters());
+    this.#filtersComponent = new FiltersView(
+      this.#filtersModel.filters,
+      this.#filtersModel.activeFilter,
+    );
+    this.#filtersComponent.setFilterChange(this.#onFilterChange);
 
     if (prevComponent === null) {
       render(this.#filtersComponent, this.#parentElement, RenderPosition.AFTERBEGIN);
@@ -41,7 +50,7 @@ export default class FiltersPresenter {
     replace(this.#filtersComponent, prevComponent);
   }
 
-  #getFilters() {
-    return this.#filtersModel.filters;
-  }
+  #onFilterChange = (filterType) => {
+    this.#filtersModel.activeFilter = filterType;
+  };
 }

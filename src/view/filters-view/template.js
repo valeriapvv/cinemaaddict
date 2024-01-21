@@ -14,14 +14,19 @@ const ACTIVE_FILTER_CLASS_NAME = 'main-navigation__item--active';
 const getFilterItemTemplate = ({name, count, isActive}) => `
   <a
     class="main-navigation__item ${isActive ? ACTIVE_FILTER_CLASS_NAME : ''}"
-    href="#${name}"
+    href="#"
+    data-filter-type="${name}"
   >
     ${FiltersLabel[name]} <span class="main-navigation__item-count">${count}</span>
   </a>
 `;
 
-export const getFiltersTemplate = (filters) => `
+export const getFiltersTemplate = (filters, activeFilter) => `
   <nav class="main-navigation">
-    ${filters.map(getFilterItemTemplate).join('')}
+    ${filters.map(({name, count}) => getFilterItemTemplate({
+    name,
+    count,
+    isActive: name === activeFilter,
+  })).join('')}
   </nav>
 `;

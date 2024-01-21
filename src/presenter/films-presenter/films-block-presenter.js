@@ -13,8 +13,6 @@ export default class FilmsBlockPresenter {
 
   #isFilmsBlockMounted = false;
 
-  #getFilms = null;
-
   constructor({
     parentElement,
     filmsModel,
@@ -28,15 +26,12 @@ export default class FilmsBlockPresenter {
     this.#popupPresenter = popupPresenter;
     this._blockComponent = blockComponent;
     this._itemsCountToShow = itemsCountToShow;
-    this.#getFilms = getFilms;
+    this._getFilms = getFilms;
   }
 
   init() {
-    this._films = this.#getFilms();
-    this._filmsCount = this._films.length;
-
     this._filmsModel.addObserver(this.#handleFilmsModelEvent);
-    this.#initFilmsBlock();
+    this._initFilmsBlock();
   }
 
   #handleFilmsModelEvent = (_event, updatedFilm) => {
@@ -50,7 +45,7 @@ export default class FilmsBlockPresenter {
     this.#popupPresenter.update(updatedFilm);
   };
 
-  #initFilmsBlock() {
+  _initFilmsBlock() {
     if (!this.#isFilmsBlockMounted) {
       this._filmsListComponent = new FilmsListView();
 
@@ -72,7 +67,7 @@ export default class FilmsBlockPresenter {
   }
 
   _renderFilms(from, to) {
-    this._films
+    this._getFilms()
       .slice(from, to)
       .forEach(this.#renderFilm);
   }
@@ -153,6 +148,5 @@ export default class FilmsBlockPresenter {
 
   #updateFilm(updatedFilm) {
     this._filmsModel.update(updatedFilm);
-    this._films = this.#getFilms();
   }
 }

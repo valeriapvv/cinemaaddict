@@ -1,8 +1,9 @@
 import {FilterType} from '../data/constants.js';
+import Observable from '../framework/observable.js';
 import {filter} from '../utils/filter.js';
 
 
-export default class FiltersModel {
+export default class FiltersModel extends Observable {
   #filters = null;
 
   #activeFilter = FilterType.All;
@@ -12,7 +13,6 @@ export default class FiltersModel {
       .map((type) => ({
         name: type,
         count: filter[type](films).length,
-        isActive: type === this.#activeFilter,
       }));
   }
 
@@ -21,11 +21,12 @@ export default class FiltersModel {
   }
 
   set activeFilter(filterType) {
-    if (!FilterType[filterType]) {
+    if (!Object.values(FilterType).includes(filterType)) {
       throw new Error('Invalid filter type');
     }
 
     this.#activeFilter = filterType;
+    this._notify();
   }
 
   get activeFilter() {
