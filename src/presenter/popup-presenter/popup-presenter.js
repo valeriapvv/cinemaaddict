@@ -3,10 +3,12 @@ import {remove, render, replace} from '../../framework/render.js';
 
 export default class PopupPresenter {
   #filmId = null;
+  #comments = [];
 
   #parentElement = null;
   #popupComponent = null;
 
+  #filmsModel = null;
   #commentsModel = null;
 
   #onShowPopup = null;
@@ -17,6 +19,7 @@ export default class PopupPresenter {
 
   constructor({
     parentElement,
+    filmsModel,
     commentsModel,
     onShowPopup,
     onClosePopup,
@@ -25,6 +28,7 @@ export default class PopupPresenter {
     this.#commentsModel = commentsModel;
     this.#onShowPopup = onShowPopup;
     this.#onClosePopup = onClosePopup;
+    this.#filmsModel = filmsModel;
   }
 
   init(film) {
@@ -38,9 +42,9 @@ export default class PopupPresenter {
 
     const prevComponent = this.#popupComponent;
 
-    const comments = this.#commentsModel.getCommentsById(film.comments);
+    this.#comments = this.#commentsModel.getCommentsById(film.comments);
 
-    this.#popupComponent = new PopupView(film, comments);
+    this.#popupComponent = new PopupView(film, this.#comments);
     this.#setEventHandlers();
 
     if (prevComponent === null) {
@@ -79,7 +83,17 @@ export default class PopupPresenter {
     if (this.#onFavoriteClick) {
       this.#popupComponent.setFavoriteClick(this.#onFavoriteClick);
     }
+
+    if (this.#comments.length) {
+      this.#popupComponent.setCommentDelete(this.#onCommentDelete);
+    }
   }
+
+  #onCommentDelete = (commentId) => {
+    // 1. Удалить коммент из commentsModel;
+
+    // 2. Удалить id коммента текущего фильма (filmsModel);
+  };
 
   update(film) {
     if (!this.#popupComponent) {

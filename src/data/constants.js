@@ -17,6 +17,11 @@ export const SortType = {
   Rating: 'rating',
 };
 
+export const CommentUserAction = {
+  Delete: 'delete',
+  Submit: 'submit',
+};
+
 export const HIDE_OVERFLOW_CLASS_NAME = 'hide-overflow';
 
 export const FILMS_BLOCK_SECONDARY_CLASS_NAME = 'films-list--extra';

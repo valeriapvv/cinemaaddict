@@ -10,6 +10,8 @@ export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--watched
 
 export const ADD_TO_FAVORITES_CLASS_NAME = 'film-details__control-button--favorite';
 
+export const DELETE_BUTTON_CLASS_NAME = 'film-details__comment-delete';
+
 export const COMMENT_INPUT_CLASS_NAME = 'film-details__comment-input';
 
 export const EMOJI_LIST_CLASS_NAME = 'film-details__emoji-list';
@@ -145,12 +147,13 @@ const getControlsTemplate = ({
 };
 
 const getCommentTemplate = ({
+  id,
   author,
   comment,
   date,
   emotion,
 }) => (`
-  <li class="film-details__comment">
+  <li class="film-details__comment" data-comment-id="${id}">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
@@ -159,7 +162,7 @@ const getCommentTemplate = ({
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${dayjs(date).format('YYYY/MM/DD HH:mm')}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button class="${DELETE_BUTTON_CLASS_NAME}">Delete</button>
       </p>
     </div>
   </li>

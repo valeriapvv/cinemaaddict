@@ -32,10 +32,12 @@ const onClosePopup = () => {
 
 const popupPresenter = new PopupPresenter({
   parentElement: rootElement,
+  filmsModel,
   commentsModel,
   onShowPopup,
   onClosePopup,
 });
+popupPresenter.init(filmsModel.films[0]);
 
 const filtersPresenter = new FiltersPresenter({
   parentElement: mainContainer,

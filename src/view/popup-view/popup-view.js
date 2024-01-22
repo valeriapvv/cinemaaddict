@@ -4,6 +4,7 @@ import {
   ADD_TO_FAVORITES_CLASS_NAME,
   ADD_TO_WATCHLIST_CLASS_NAME,
   ALREADY_WATCHED_CLASS_NAME,
+  DELETE_BUTTON_CLASS_NAME,
   COMMENT_INPUT_CLASS_NAME,
   EMOJI_LIST_CLASS_NAME,
   getPopupTemplate,
@@ -47,6 +48,25 @@ export default class PopupView extends AbstractStatefulView {
     this.#setEmotionChange();
     this.#setCommentInput();
   }
+
+  setCommentDelete(onDelete) {
+    this._callback.delete = onDelete;
+
+    this.element.addEventListener('click', this.#onDeleteButtonClick);
+  }
+
+  #onDeleteButtonClick = (evt) => {
+    const deleteButton = evt.target.closest(`.${DELETE_BUTTON_CLASS_NAME}`);
+
+    if (!deleteButton) {
+      return;
+    }
+
+    const commentItem = evt.target.closest('[data-comment-id]');
+    const {commentId} = commentItem.dataset;
+
+    this._callback.delete(commentId);
+  };
 
   #setCommentInput() {
     this.#textareaElement = this.element.querySelector(`.${COMMENT_INPUT_CLASS_NAME}`);
