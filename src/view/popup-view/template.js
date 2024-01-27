@@ -162,7 +162,7 @@ const getCommentTemplate = ({
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${dayjs(date).format('YYYY/MM/DD HH:mm')}</span>
-        <button class="${DELETE_BUTTON_CLASS_NAME}">Delete</button>
+        <button class="${DELETE_BUTTON_CLASS_NAME}" type="button">Delete</button>
       </p>
     </div>
   </li>

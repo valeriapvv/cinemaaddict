@@ -37,7 +37,6 @@ const popupPresenter = new PopupPresenter({
   onShowPopup,
   onClosePopup,
 });
-popupPresenter.init(filmsModel.films[0]);
 
 const filtersPresenter = new FiltersPresenter({
   parentElement: mainContainer,

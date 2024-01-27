@@ -2,8 +2,8 @@ import PopupView from '../../view/popup-view/popup-view.js';
 import {remove, render, replace} from '../../framework/render.js';
 
 export default class PopupPresenter {
-  #filmId = null;
-  #comments = [];
+  #film = null;
+  #comments = null;
 
   #parentElement = null;
   #popupComponent = null;
@@ -32,19 +32,20 @@ export default class PopupPresenter {
   }
 
   init(film) {
-    if (this.#filmId === film.id) {
+    // TODO: Рендеринг попапа в отдельный метод
+    if (this.#isSameFilm(film)) {
       return;
     }
 
-    this.#filmId = film.id;
+    this.#film = film;
 
     this.#onShowPopup();
 
     const prevComponent = this.#popupComponent;
 
-    this.#comments = this.#commentsModel.getCommentsById(film.comments);
+    this.#comments = this.#getComments(this.#film);
 
-    this.#popupComponent = new PopupView(film, this.#comments);
+    this.#popupComponent = new PopupView(this.#film, this.#comments);
     this.#setEventHandlers();
 
     if (prevComponent === null) {
@@ -52,12 +53,24 @@ export default class PopupPresenter {
         this.#popupComponent,
         this.#parentElement,
       );
+
+      this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
       return;
     }
 
     replace(this.#popupComponent, prevComponent);
     remove(prevComponent);
   }
+
+  #handleCommentsModelEvent = (_event, commentId) => {
+    const {comments} = this.#film;
+    const newComments = comments.filter(((id) => id !== commentId));
+
+    this.#filmsModel.update({
+      ...this.#film,
+      comments: newComments,
+    });
+  };
 
   addEventHandlers({
     onAddToWatchlistClick = null,
@@ -84,15 +97,13 @@ export default class PopupPresenter {
       this.#popupComponent.setFavoriteClick(this.#onFavoriteClick);
     }
 
-    if (this.#comments.length) {
+    if (this.#comments?.length) {
       this.#popupComponent.setCommentDelete(this.#onCommentDelete);
     }
   }
 
   #onCommentDelete = (commentId) => {
-    // 1. Удалить коммент из commentsModel;
-
-    // 2. Удалить id коммента текущего фильма (filmsModel);
+    this.#commentsModel.delete(+commentId);
   };
 
   update(film) {
@@ -100,12 +111,17 @@ export default class PopupPresenter {
       return;
     }
 
-    if (this.#filmId !== film.id) {
+    if (!this.#isSameFilm(film)) {
       // this.init(film);
       return;
     }
 
-    this.#popupComponent.updateElement({film});
+    const comments = this.#getComments(film);
+
+    this.#popupComponent.updateElement({film, comments});
+
+    this.#film = film;
+    this.#comments = comments;
   }
 
   destroy = () => {
@@ -116,6 +132,14 @@ export default class PopupPresenter {
   #removeComponent() {
     remove(this.#popupComponent);
     this.#popupComponent = null;
-    this.#filmId = null;
+    this.#film = null;
+  }
+
+  #isSameFilm(film) {
+    return this.#film?.id === film.id;
+  }
+
+  #getComments(film) {
+    return this.#commentsModel.getCommentsById(film.comments);
   }
 }
