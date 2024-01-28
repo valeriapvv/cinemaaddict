@@ -21,6 +21,7 @@ export default class Observable {
     this.#observers.delete(observer);
   }
 
+  // TODO: Убрать параметр event?
   /**
    * Метод для оповезения подписчиков о наступлении события
    * @param {*} event Тип события

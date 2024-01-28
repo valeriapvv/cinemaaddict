@@ -42,7 +42,6 @@ export default class FilmsBlockPresenter {
     }
 
     filmCardPresenter.init(updatedFilm);
-    this.#popupPresenter.update(updatedFilm);
   };
 
   _initFilmsBlock() {

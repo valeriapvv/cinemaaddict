@@ -54,6 +54,7 @@ export default class PopupPresenter {
         this.#parentElement,
       );
 
+      this.#filmsModel.addObserver(this.#handleFilmsModelEvent);
       this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
       return;
     }
@@ -61,6 +62,10 @@ export default class PopupPresenter {
     replace(this.#popupComponent, prevComponent);
     remove(prevComponent);
   }
+
+  #handleFilmsModelEvent = (_event, updatedFilm) => {
+    this.update(updatedFilm);
+  };
 
   #handleCommentsModelEvent = (_event, commentId) => {
     const {comments} = this.#film;
