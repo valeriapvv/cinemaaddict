@@ -1,6 +1,8 @@
 export const FILMS_COUNT = 12;
 
-export const COMMENTS_COUNT = 100;
+// export const COMMENTS_COUNT = 100;
+
+export const COMMENTS_MAX_COUNT = 5;
 
 export const FILM_MAX_RATING = 10;
 

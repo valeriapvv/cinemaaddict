@@ -4,9 +4,8 @@ import {
   createUniqueIntegerGenerator,
   createNextIntegerGenerator,
 } from './utils.js';
-import {createCommentsIdsGenerator} from './data-generation.js';
 import {
-  COMMENTS_COUNT,
+  COMMENTS_MAX_COUNT,
   FILMS_COUNT,
   FILM_GENRES,
   FILM_MAX_RATING,
@@ -22,15 +21,16 @@ const {
   person,
   date,
   location,
+  string: {
+    nanoid,
+  },
 } = faker;
 
 const getFilmId = createNextIntegerGenerator();
 
-const getCommentId = createCommentsIdsGenerator();
-
 const generateCommentsIds = () => Array.from({
-  length: number.int(COMMENTS_COUNT / FILMS_COUNT),
-}, getCommentId);
+  length: number.int(COMMENTS_MAX_COUNT),
+}, nanoid);
 
 const generateFilmTitle = () => lorem.sentence({min: 2, max: 7});
 
@@ -68,7 +68,7 @@ const generateWatchingDate = (releaseDate) =>
     to: new Date(),
   }).toISOString();
 
-export const generateFilm = () => {
+const generateFilm = () => {
   const releaseDate = generateReleaseDate();
   const alreadyWatched = getRandomBoolean();
   const watchingDate = alreadyWatched ? generateWatchingDate(releaseDate) : null;
@@ -101,3 +101,5 @@ export const generateFilm = () => {
     }
   };
 };
+
+export const films = Array.from({length: FILMS_COUNT}, generateFilm);

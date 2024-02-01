@@ -1,13 +1,11 @@
-import Observable from '../framework/observable.js';
-import {generateComment} from '../mock/comment.js';
-import {COMMENTS_COUNT} from '../mock/constants.js';
+import {comments} from '../mock/comments.js';
 
-export default class CommentsModel extends Observable {
+export default class CommentsModel {
   #comments = null;
 
   get comments() {
     if (this.#comments === null) {
-      this.#comments = Array.from({length: COMMENTS_COUNT}, generateComment);
+      this.#comments = comments;
     }
 
     return [...this.#comments];
@@ -18,14 +16,18 @@ export default class CommentsModel extends Observable {
   }
 
   delete(commentId) {
-    const comments = this.#comments;
-    const index = comments.findIndex((({id}) => id === commentId));
+    const index = this.#comments.findIndex((({id}) => id === commentId));
 
     this.#comments = [
-      ...comments.slice(0, index),
-      ...comments.slice(index + 1),
+      ...this.#comments.slice(0, index),
+      ...this.#comments.slice(index + 1),
     ];
+  }
 
-    this._notify(null, commentId);
+  add(comment) {
+    this.#comments = [
+      ...this.#comments,
+      comment,
+    ];
   }
 }
