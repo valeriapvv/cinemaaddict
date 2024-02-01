@@ -42,6 +42,7 @@ export default class PopupView extends AbstractStatefulView {
     this.setAlreadyWatchedClick(this._callback.alreadyWatchedClick);
     this.setFavoriteClick(this._callback.favoriteClick);
     this.setClose(this._callback.close);
+    this.setCommentSubmit(this._callback.commentSubmit);
 
     if (this._state.comments?.length) {
       this.setCommentDelete(this._callback.commentDelete);
@@ -52,6 +53,27 @@ export default class PopupView extends AbstractStatefulView {
     this.#setEmotionChange();
     this.#setCommentInput();
   }
+
+  setCommentSubmit(onSubmit) {
+    this._callback.commentSubmit = onSubmit;
+
+    document.addEventListener('keydown', this.#onCommentSubmit);
+  }
+
+  #onCommentSubmit = (evt) => {
+    const toSubmit =
+      evt.ctrlKey
+      && evt.key === 'Enter'
+      && evt.target === this.#textareaElement;
+
+    if (!toSubmit) {
+      return;
+    }
+
+    evt.preventDefault();
+
+    this._callback.commentSubmit(this._state.newComment);
+  };
 
   setCommentDelete(onDelete) {
     this._callback.commentDelete = onDelete;
@@ -178,6 +200,7 @@ export default class PopupView extends AbstractStatefulView {
 
   #removeHandlers = () => {
     document.removeEventListener('keydown', this.#onEscKeydown);
+    document.removeEventListener('keydown', this.#onCommentSubmit);
   };
 
   removeElement() {

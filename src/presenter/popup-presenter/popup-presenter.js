@@ -1,5 +1,6 @@
 import PopupView from '../../view/popup-view/popup-view.js';
 import {remove, render, replace} from '../../framework/render.js';
+import {faker} from '@faker-js/faker';
 
 export default class PopupPresenter {
   #film = null;
@@ -55,7 +56,6 @@ export default class PopupPresenter {
       );
 
       this.#filmsModel.addObserver(this.#handleFilmsModelEvent);
-      this.#commentsModel.addObserver(this.#handleCommentsModelEvent);
       return;
     }
 
@@ -65,16 +65,6 @@ export default class PopupPresenter {
 
   #handleFilmsModelEvent = (_event, updatedFilm) => {
     this.update(updatedFilm);
-  };
-
-  #handleCommentsModelEvent = (_event, commentId) => {
-    const {comments} = this.#film;
-    const newComments = comments.filter(((id) => id !== commentId));
-
-    this.#filmsModel.update({
-      ...this.#film,
-      comments: newComments,
-    });
   };
 
   addEventHandlers({
@@ -105,10 +95,44 @@ export default class PopupPresenter {
     if (this.#comments?.length) {
       this.#popupComponent.setCommentDelete(this.#onCommentDelete);
     }
+
+    this.#popupComponent.setCommentSubmit(this.#onCommentSubmit);
   }
 
   #onCommentDelete = (commentId) => {
-    this.#commentsModel.delete(+commentId);
+    this.#commentsModel.delete(commentId);
+
+    const comments = this.#film
+      .comments
+      .filter(((id) => id !== commentId));
+
+    this.#filmsModel.update({
+      ...this.#film,
+      comments,
+    });
+  };
+
+  #onCommentSubmit = (newComment) => {
+    const newCommentId = faker.string.nanoid();
+
+    this.#commentsModel.add({
+      ...newComment,
+
+      // TODO: Убрать добавление полей:
+      id: newCommentId,
+      author: 'John Doe',
+      date: new Date().toISOString(),
+    });
+
+    const comments = [
+      ...this.#film.comments,
+      newCommentId,
+    ];
+
+    this.#filmsModel.update({
+      ...this.#film,
+      comments,
+    });
   };
 
   update(film) {

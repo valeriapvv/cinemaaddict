@@ -19,7 +19,7 @@ export const SortType = {
 
 export const CommentUserAction = {
   Delete: 'delete',
-  Submit: 'submit',
+  Add: 'add',
 };
 
 export const HIDE_OVERFLOW_CLASS_NAME = 'hide-overflow';
