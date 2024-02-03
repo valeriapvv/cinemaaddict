@@ -42,6 +42,10 @@ export default class PopupPresenter {
 
     this.#onShowPopup();
 
+    this.#renderPopup();
+  }
+
+  #renderPopup() {
     const prevComponent = this.#popupComponent;
 
     this.#comments = this.#getComments(this.#film);
