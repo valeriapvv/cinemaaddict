@@ -133,6 +133,8 @@ export default class PopupPresenter {
       ...this.#film,
       comments,
     });
+
+    // TODO: Сбросить состояние комментария при его успешном добавлении
   };
 
   update(film) {

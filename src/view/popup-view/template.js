@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {formatMinutes} from '../../utils/common.js';
 import {EMOTIONS} from '../../data/constants.js';
+import he from 'he';
 
 export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';
 
@@ -158,7 +159,7 @@ const getCommentTemplate = ({
       <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
     <div>
-      <p class="film-details__comment-text">${comment}</p>
+      <p class="film-details__comment-text">${he.encode(comment)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${dayjs(date).format('YYYY/MM/DD HH:mm')}</span>
