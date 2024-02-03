@@ -70,6 +70,15 @@ export default class PopupView extends AbstractStatefulView {
       return;
     }
 
+    const {emotion, comment} = this._state.newComment;
+
+    if (!emotion || !comment) {
+      // TODO: заменить alert на анимацию "shake" и/или показ элемента с сообщением
+      // eslint-disable-next-line no-alert
+      alert('Choose an emotion and write your comment');
+      return;
+    }
+
     evt.preventDefault();
 
     this._callback.commentSubmit(this._state.newComment);
