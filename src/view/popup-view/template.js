@@ -180,7 +180,11 @@ const getNewCommentBlockTemplate = ({
   emotion: currentEmotion,
 } = {}) => (`
     <div class="film-details__new-comment">
-      <div class="film-details__add-emoji-label"></div>
+      <div class="film-details__add-emoji-label">
+        ${currentEmotion ? `
+          <img src="images/emoji/${currentEmotion}.png" width="55" height="55" alt="emoji-${currentEmotion}">`
+    : ''}
+      </div>
 
       <label class="film-details__comment-label">
         <textarea
@@ -203,7 +207,7 @@ const getNewCommentBlockTemplate = ({
             ${emotion === currentEmotion ? 'checked' : ''}
           >
           <label class="film-details__emoji-label" for="emoji-${emotion}">
-            <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
+            <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji-${currentEmotion}">
           </label>
         `).join('')}
       </div>
