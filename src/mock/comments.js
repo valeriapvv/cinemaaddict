@@ -23,4 +23,4 @@ const generateComment = (id) => ({
 
 const commentsIds = films.reduce((ids, film) => ids.concat(film.comments), []);
 
-export const comments = commentsIds.map(generateComment);
+export const filmsComments = commentsIds.map(generateComment);
