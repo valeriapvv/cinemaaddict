@@ -7,6 +7,7 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   #renderedFilmsCount = null;
 
   #filtersModel = null;
+  #onFilterModelEvent = null;
 
   constructor({
     parentElement,
@@ -16,6 +17,7 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
     blockComponent,
     itemsCountToShow,
     getFilms,
+    onFilterModelEvent,
   }) {
     super({
       parentElement,
@@ -27,6 +29,7 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
     });
 
     this.#filtersModel = filtersModel;
+    this.#onFilterModelEvent = onFilterModelEvent;
   }
 
   init() {
@@ -39,10 +42,9 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   }
 
   #handleFiltersModelEvent = () => {
-    this._initFilmsBlock();
+    this.#onFilterModelEvent?.();
 
-    this.#renderedFilmsCount = this._itemsCountToShow;
-    this.#renderShowMoreButton();
+    this.init();
   };
 
   // Show More Button

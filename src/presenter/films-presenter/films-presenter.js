@@ -14,8 +14,6 @@ import {filter} from '../../utils/filter.js';
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
 
-const defaultSortType = SortType.Default;
-
 export default class FilmsPresenter {
   #parentElement = null;
 
@@ -25,7 +23,7 @@ export default class FilmsPresenter {
   #noFilmsComponent = null;
   #filmsSectionComponent = null;
   #sortComponent = null;
-  #currentSortType = defaultSortType;
+  #currentSortType = SortType.Default;
 
   #mainFilmsPresenter = null;
   #topRatedFilmsPresenter = null;
@@ -120,6 +118,7 @@ export default class FilmsPresenter {
       blockComponent: new FilmsBlockView(),
       itemsCountToShow: MAIN_FILMS_COUNT_TO_SHOW,
       getFilms: this.#getFilms,
+      onFilterModelEvent: this.#onFilterModelEvent,
     });
 
     this.#mainFilmsPresenter.init();
@@ -152,6 +151,12 @@ export default class FilmsPresenter {
     });
     this.#commentedFilmsPresenter.init();
   }
+
+  // On Filter Change
+  #onFilterModelEvent = () => {
+    this.#currentSortType = SortType.Default;
+    this.#initSort();
+  };
 
   // Get Films
 
