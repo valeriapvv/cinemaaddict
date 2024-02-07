@@ -225,7 +225,7 @@ export const getPopupTemplate = ({
 
   return (`
     <section class="film-details">
-      <form class="film-details__inner" action="" method="submit">
+      <form class="film-details__inner" action="#" method="submit">
         <div class="film-details__top-container">
 
           <div class="film-details__close">

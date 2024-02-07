@@ -17,9 +17,10 @@ export const SortType = {
   Rating: 'rating',
 };
 
-export const CommentUserAction = {
-  Delete: 'delete',
-  Add: 'add',
+export const UpdateType = {
+  FilmDetailsUpdate: 'filmDetailsUpdate',
+  CommentDelete: 'commentDelete',
+  CommentAdd: 'commentAdd',
 };
 
 export const HIDE_OVERFLOW_CLASS_NAME = 'hide-overflow';

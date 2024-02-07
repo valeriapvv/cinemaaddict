@@ -12,7 +12,7 @@ export default class FilmsModel extends Observable {
     return [...this.#films];
   }
 
-  update(updatedFilm) {
+  update(event, updatedFilm) {
     const prevFilms = this.#films;
     const index = prevFilms.findIndex(({id}) => id === updatedFilm.id);
 
@@ -22,6 +22,6 @@ export default class FilmsModel extends Observable {
       ...prevFilms.slice(index + 1),
     ];
 
-    this._notify(null, updatedFilm);
+    this._notify(event, updatedFilm);
   }
 }

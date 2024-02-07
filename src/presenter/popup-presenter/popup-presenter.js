@@ -1,6 +1,7 @@
 import PopupView from '../../view/popup-view/popup-view.js';
 import {remove, render, replace} from '../../framework/render.js';
 import {faker} from '@faker-js/faker';
+import {UpdateType} from '../../data/constants.js';
 
 export default class PopupPresenter {
   #film = null;
@@ -33,7 +34,6 @@ export default class PopupPresenter {
   }
 
   init(film) {
-    // TODO: Рендеринг попапа в отдельный метод
     if (this.#isSameFilm(film)) {
       return;
     }
@@ -67,8 +67,10 @@ export default class PopupPresenter {
     remove(prevComponent);
   }
 
-  #handleFilmsModelEvent = (_event, updatedFilm) => {
-    this.update(updatedFilm);
+  #handleFilmsModelEvent = (event, updatedFilm) => {
+    this.update(updatedFilm, {
+      resetCommentForm: event === UpdateType.CommentAdd,
+    });
   };
 
   addEventHandlers({
@@ -110,7 +112,7 @@ export default class PopupPresenter {
       .comments
       .filter(((id) => id !== commentId));
 
-    this.#filmsModel.update({
+    this.#filmsModel.update(UpdateType.CommentDelete, {
       ...this.#film,
       comments,
     });
@@ -133,15 +135,13 @@ export default class PopupPresenter {
       newCommentId,
     ];
 
-    this.#filmsModel.update({
+    this.#filmsModel.update(UpdateType.CommentAdd, {
       ...this.#film,
       comments,
     });
-
-    // TODO: Сбросить состояние комментария при его успешном добавлении
   };
 
-  update(film) {
+  update(film, options) {
     if (!this.#popupComponent) {
       return;
     }
@@ -153,7 +153,7 @@ export default class PopupPresenter {
 
     const comments = this.#getComments(film);
 
-    this.#popupComponent.updateElement({film, comments});
+    this.#popupComponent.updateElement({film, comments}, options);
 
     this.#film = film;
     this.#comments = comments;

@@ -12,6 +12,11 @@ import {
 
 // TODO: Повторяется код FilmCardView по навешиванию обработчиков
 
+const defaultNewCommentState = {
+  comment: null,
+  emotion: null,
+};
+
 export default class PopupView extends AbstractStatefulView {
   #textareaElement = null;
 
@@ -22,10 +27,7 @@ export default class PopupView extends AbstractStatefulView {
     this._setState({
       film,
       comments,
-      newComment: {
-        comment: null,
-        emotion: null,
-      },
+      newComment: defaultNewCommentState,
     });
 
     this.#setInnerHandlers();
@@ -48,6 +50,16 @@ export default class PopupView extends AbstractStatefulView {
       this.setCommentDelete(this._callback.commentDelete);
     }
   };
+
+  updateElement(update, {
+    resetCommentForm = false,
+  } = {}) {
+    if (resetCommentForm) {
+      this._setState({newComment: defaultNewCommentState});
+    }
+
+    super.updateElement(update);
+  }
 
   #setInnerHandlers() {
     this.#setEmotionChange();
