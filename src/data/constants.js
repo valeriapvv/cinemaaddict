@@ -4,11 +4,15 @@ export const ContainerSelector = {
   FooterInfo: '.footer__statistics',
 };
 
-export const FilterType = {
-  All: 'all',
+const FilmDetail = {
   Watchlist: 'watchlist',
   History: 'history',
   Favorites: 'favorites',
+};
+
+export const FilterType = {
+  All: 'all',
+  ...FilmDetail,
 };
 
 export const SortType = {
@@ -18,7 +22,7 @@ export const SortType = {
 };
 
 export const UpdateType = {
-  FilmDetailsUpdate: 'filmDetailsUpdate',
+  ...FilmDetail,
   CommentDelete: 'commentDelete',
   CommentAdd: 'commentAdd',
 };

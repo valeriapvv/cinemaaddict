@@ -1,6 +1,7 @@
 import FilmsListView from '../../view/films-list-view/films-list-view.js';
 import FilmCardPresenter from '../film-card-presenter/film-card-presenter.js';
 import {render} from '../../framework/render.js';
+import {UpdateType} from '../../data/constants.js';
 
 // TODO: Перенести логику изменения данных в модель?
 
@@ -78,7 +79,6 @@ export default class FilmsBlockPresenter {
       onAddToWatchlistClick: this.#onAddToWatchlistClick,
       onAlreadyWatchedClick: this.#onAlreadyWatchedClick,
       onFavoriteClick: this.#onFavoriteClick,
-      onDestroy: this.#onFilmPresenterDestroy,
     });
     filmCardPresenter.init(film);
 
@@ -106,7 +106,7 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(updatedFilm);
+    this.#updateFilm(UpdateType.Watchlist, updatedFilm);
   };
 
   #onAlreadyWatchedClick = (film) => {
@@ -123,7 +123,7 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(updatedFilm);
+    this.#updateFilm(UpdateType.History, updatedFilm);
   };
 
   #onFavoriteClick = (film) => {
@@ -138,14 +138,10 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(updatedFilm);
+    this.#updateFilm(UpdateType.Favorites, updatedFilm);
   };
 
-  #onFilmPresenterDestroy = () => {
-    this.#popupPresenter.destroy();
-  };
-
-  #updateFilm(updatedFilm) {
-    this._filmsModel.update(updatedFilm);
+  #updateFilm(updateType, updatedFilm) {
+    this._filmsModel.update(updateType, updatedFilm);
   }
 }

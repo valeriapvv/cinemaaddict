@@ -1,6 +1,6 @@
 import FilmsBlockPresenter from './films-block-presenter.js';
 import ShowMoreButtonView from '../../view/show-more-button-view/show-more-button-view.js';
-import {remove, render} from '../../framework/render.js';
+import {RenderPosition, remove, render} from '../../framework/render.js';
 
 export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   #showMoreButtonComponent = null;
@@ -33,13 +33,22 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
   }
 
   init() {
+    this._filmsModel.addObserver(this.#handleFilmsModelEvent);
+    this.#filtersModel.addObserver(this.#handleFiltersModelEvent);
+
     super.init();
 
     this.#renderedFilmsCount = this._itemsCountToShow;
     this.#renderShowMoreButton();
-
-    this.#filtersModel.addObserver(this.#handleFiltersModelEvent);
   }
+
+  #handleFilmsModelEvent = (event) => {
+    // TODO: Сравнение разных сущностей типа обновления и типа фильтра - так себе решение?
+    if (event === this.#filtersModel.activeFilter) {
+      this.init();
+
+    }
+  };
 
   #handleFiltersModelEvent = () => {
     this.#onFilterModelEvent?.();
@@ -58,7 +67,7 @@ export default class MainFilmsBlockPresenter extends FilmsBlockPresenter {
 
     this.#showMoreButtonComponent = new ShowMoreButtonView();
     this.#showMoreButtonComponent.setClick(this.#onShowMoreButtonClick);
-    render(this.#showMoreButtonComponent, this._blockComponent.element);
+    render(this.#showMoreButtonComponent, this._blockComponent.element, RenderPosition.BEFOREEND);
   }
 
   #onShowMoreButtonClick = () => {

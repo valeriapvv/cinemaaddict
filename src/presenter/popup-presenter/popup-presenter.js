@@ -168,6 +168,7 @@ export default class PopupPresenter {
     remove(this.#popupComponent);
     this.#popupComponent = null;
     this.#film = null;
+    this.#comments = null;
   }
 
   #isSameFilm(film) {

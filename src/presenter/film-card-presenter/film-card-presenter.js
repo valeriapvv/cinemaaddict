@@ -46,7 +46,7 @@ export default class FilmCardPresenter {
   }
 
   destroy() {
-    this.#onDestroy();
+    this.#onDestroy?.();
 
     remove(this.#cardComponent);
     this.#cardComponent = null;
