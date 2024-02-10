@@ -1,18 +1,35 @@
-import {generateComment} from '../mock/comment.js';
-import {COMMENTS_COUNT} from '../mock/constants.js';
+import {filmsComments} from '../mock/comments.js';
 
 export default class CommentsModel {
   #comments = null;
 
   get comments() {
     if (this.#comments === null) {
-      this.#comments = Array.from({length: COMMENTS_COUNT}, generateComment);
+      this.#comments = filmsComments;
     }
 
     return [...this.#comments];
   }
 
   getCommentsById(idList) {
-    return idList.map((id) => this.comments.find((comment) => comment.id === id));
+    const comments = this.comments;
+    return idList.map((id) => comments.find((comment) => comment.id === id));
+  }
+
+  delete(commentId) {
+    const comments = this.comments;
+    const index = comments.findIndex((({id}) => id === commentId));
+
+    this.#comments = [
+      ...comments.slice(0, index),
+      ...comments.slice(index + 1),
+    ];
+  }
+
+  add(comment) {
+    this.#comments = [
+      ...this.comments,
+      comment,
+    ];
   }
 }

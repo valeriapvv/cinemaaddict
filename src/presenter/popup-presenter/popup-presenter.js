@@ -1,12 +1,16 @@
 import PopupView from '../../view/popup-view/popup-view.js';
 import {remove, render, replace} from '../../framework/render.js';
+import {faker} from '@faker-js/faker';
+import {UpdateType} from '../../data/constants.js';
 
 export default class PopupPresenter {
-  #filmId = null;
+  #film = null;
+  #comments = null;
 
   #parentElement = null;
   #popupComponent = null;
 
+  #filmsModel = null;
   #commentsModel = null;
 
   #onShowPopup = null;
@@ -17,6 +21,7 @@ export default class PopupPresenter {
 
   constructor({
     parentElement,
+    filmsModel,
     commentsModel,
     onShowPopup,
     onClosePopup,
@@ -25,22 +30,27 @@ export default class PopupPresenter {
     this.#commentsModel = commentsModel;
     this.#onShowPopup = onShowPopup;
     this.#onClosePopup = onClosePopup;
+    this.#filmsModel = filmsModel;
   }
 
   init(film) {
-    if (this.#filmId === film.id) {
+    if (this.#isSameFilm(film)) {
       return;
     }
 
-    this.#filmId = film.id;
+    this.#film = film;
 
     this.#onShowPopup();
 
+    this.#renderPopup();
+  }
+
+  #renderPopup() {
     const prevComponent = this.#popupComponent;
 
-    const comments = this.#commentsModel.getCommentsById(film.comments);
+    this.#comments = this.#getComments(this.#film);
 
-    this.#popupComponent = new PopupView(film, comments);
+    this.#popupComponent = new PopupView(this.#film, this.#comments);
     this.#setEventHandlers();
 
     if (prevComponent === null) {
@@ -48,12 +58,20 @@ export default class PopupPresenter {
         this.#popupComponent,
         this.#parentElement,
       );
+
+      this.#filmsModel.addObserver(this.#handleFilmsModelEvent);
       return;
     }
 
     replace(this.#popupComponent, prevComponent);
     remove(prevComponent);
   }
+
+  #handleFilmsModelEvent = (event, updatedFilm) => {
+    this.update(updatedFilm, {
+      resetCommentForm: event === UpdateType.CommentAdd,
+    });
+  };
 
   addEventHandlers({
     onAddToWatchlistClick = null,
@@ -79,19 +97,66 @@ export default class PopupPresenter {
     if (this.#onFavoriteClick) {
       this.#popupComponent.setFavoriteClick(this.#onFavoriteClick);
     }
+
+    if (this.#comments?.length) {
+      this.#popupComponent.setCommentDelete(this.#onCommentDelete);
+    }
+
+    this.#popupComponent.setCommentSubmit(this.#onCommentSubmit);
   }
 
-  update(film) {
+  #onCommentDelete = (commentId) => {
+    this.#commentsModel.delete(commentId);
+
+    const comments = this.#film
+      .comments
+      .filter(((id) => id !== commentId));
+
+    this.#filmsModel.update(UpdateType.CommentDelete, {
+      ...this.#film,
+      comments,
+    });
+  };
+
+  #onCommentSubmit = (newComment) => {
+    const newCommentId = faker.string.nanoid();
+
+    this.#commentsModel.add({
+      ...newComment,
+
+      // TODO: Убрать добавление полей:
+      id: newCommentId,
+      author: 'John Doe',
+      date: new Date().toISOString(),
+    });
+
+    const comments = [
+      ...this.#film.comments,
+      newCommentId,
+    ];
+
+    this.#filmsModel.update(UpdateType.CommentAdd, {
+      ...this.#film,
+      comments,
+    });
+  };
+
+  update(film, options) {
     if (!this.#popupComponent) {
       return;
     }
 
-    if (this.#filmId !== film.id) {
+    if (!this.#isSameFilm(film)) {
       // this.init(film);
       return;
     }
 
-    this.#popupComponent.updateElement({film});
+    const comments = this.#getComments(film);
+
+    this.#popupComponent.updateElement({film, comments}, options);
+
+    this.#film = film;
+    this.#comments = comments;
   }
 
   destroy = () => {
@@ -102,6 +167,15 @@ export default class PopupPresenter {
   #removeComponent() {
     remove(this.#popupComponent);
     this.#popupComponent = null;
-    this.#filmId = null;
+    this.#film = null;
+    this.#comments = null;
+  }
+
+  #isSameFilm(film) {
+    return this.#film?.id === film.id;
+  }
+
+  #getComments(film) {
+    return this.#commentsModel.getCommentsById(film.comments);
   }
 }

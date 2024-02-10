@@ -6,6 +6,7 @@ import FilmsPresenter from './presenter/films-presenter/films-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter/films-count-presenter.js';
 import PopupPresenter from './presenter/popup-presenter/popup-presenter.js';
 import {ContainerSelector, HIDE_OVERFLOW_CLASS_NAME} from './data/constants.js';
+import FiltersPresenter from './presenter/filters-presenter/filters-presenter.js';
 
 const rootElement = document.body;
 const mainContainer = document.querySelector(ContainerSelector.MainScreen);
@@ -13,7 +14,6 @@ const mainContainer = document.querySelector(ContainerSelector.MainScreen);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel();
 
-// eslint-disable-next-line no-unused-vars
 const filtersModel = new FiltersModel();
 filtersModel.createFilters(filmsModel.films);
 
@@ -32,10 +32,18 @@ const onClosePopup = () => {
 
 const popupPresenter = new PopupPresenter({
   parentElement: rootElement,
+  filmsModel,
   commentsModel,
   onShowPopup,
   onClosePopup,
 });
+
+const filtersPresenter = new FiltersPresenter({
+  parentElement: mainContainer,
+  filmsModel,
+  filtersModel,
+});
+filtersPresenter.init();
 
 const filmsPresenter = new FilmsPresenter({
   parentElement: mainContainer,

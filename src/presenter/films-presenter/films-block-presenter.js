@@ -1,6 +1,7 @@
 import FilmsListView from '../../view/films-list-view/films-list-view.js';
 import FilmCardPresenter from '../film-card-presenter/film-card-presenter.js';
 import {render} from '../../framework/render.js';
+import {UpdateType} from '../../data/constants.js';
 
 // TODO: Перенести логику изменения данных в модель?
 
@@ -12,8 +13,6 @@ export default class FilmsBlockPresenter {
   #filmPresenterMap = new Map();
 
   #isFilmsBlockMounted = false;
-
-  #getFilms = null;
 
   constructor({
     parentElement,
@@ -28,17 +27,25 @@ export default class FilmsBlockPresenter {
     this.#popupPresenter = popupPresenter;
     this._blockComponent = blockComponent;
     this._itemsCountToShow = itemsCountToShow;
-    this.#getFilms = getFilms;
+    this._getFilms = getFilms;
   }
 
   init() {
-    this._films = this.#getFilms();
-    this._filmsCount = this._films.length;
-
-    this.#initFilmsBlock();
+    this._filmsModel.addObserver(this.#handleFilmsModelEvent);
+    this._initFilmsBlock();
   }
 
-  #initFilmsBlock() {
+  #handleFilmsModelEvent = (_event, updatedFilm) => {
+    const filmCardPresenter = this.#filmPresenterMap.get(updatedFilm.id);
+
+    if (!filmCardPresenter) {
+      return;
+    }
+
+    filmCardPresenter.init(updatedFilm);
+  };
+
+  _initFilmsBlock() {
     if (!this.#isFilmsBlockMounted) {
       this._filmsListComponent = new FilmsListView();
 
@@ -60,7 +67,7 @@ export default class FilmsBlockPresenter {
   }
 
   _renderFilms(from, to) {
-    this._films
+    this._getFilms()
       .slice(from, to)
       .forEach(this.#renderFilm);
   }
@@ -72,7 +79,6 @@ export default class FilmsBlockPresenter {
       onAddToWatchlistClick: this.#onAddToWatchlistClick,
       onAlreadyWatchedClick: this.#onAlreadyWatchedClick,
       onFavoriteClick: this.#onFavoriteClick,
-      onDestroy: this.#onFilmPresenterDestroy,
     });
     filmCardPresenter.init(film);
 
@@ -100,7 +106,7 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(updatedFilm);
+    this.#updateFilm(UpdateType.Watchlist, updatedFilm);
   };
 
   #onAlreadyWatchedClick = (film) => {
@@ -117,7 +123,7 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(updatedFilm);
+    this.#updateFilm(UpdateType.History, updatedFilm);
   };
 
   #onFavoriteClick = (film) => {
@@ -132,23 +138,10 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(updatedFilm);
+    this.#updateFilm(UpdateType.Favorites, updatedFilm);
   };
 
-  #onFilmPresenterDestroy = () => {
-    this.#popupPresenter.destroy();
-  };
-
-  #updateFilm(updatedFilm) {
-    this._filmsModel.update(updatedFilm);
-    this._films = this.#getFilms();
-
-    this.#redrawFilmCard(updatedFilm);
-    this.#popupPresenter.update(updatedFilm);
+  #updateFilm(updateType, updatedFilm) {
+    this._filmsModel.update(updateType, updatedFilm);
   }
-
-  #redrawFilmCard = (film) => {
-    const filmCardPresenter = this.#filmPresenterMap.get(film.id);
-    filmCardPresenter.init(film);
-  };
 }

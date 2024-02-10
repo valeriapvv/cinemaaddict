@@ -1,18 +1,18 @@
-import {FILMS_COUNT} from '../mock/constants.js';
-import {generateFilm} from '../mock/film.js';
+import Observable from '../framework/observable.js';
+import {films} from '../mock/films.js';
 
-export default class FilmsModel {
+export default class FilmsModel extends Observable {
   #films = null;
 
   get films() {
     if (this.#films === null) {
-      this.#films = Array.from({length: FILMS_COUNT}, generateFilm);
+      this.#films = films;
     }
 
     return [...this.#films];
   }
 
-  update(updatedFilm) {
+  update(event, updatedFilm) {
     const prevFilms = this.#films;
     const index = prevFilms.findIndex(({id}) => id === updatedFilm.id);
 
@@ -21,5 +21,7 @@ export default class FilmsModel {
       updatedFilm,
       ...prevFilms.slice(index + 1),
     ];
+
+    this._notify(event, updatedFilm);
   }
 }

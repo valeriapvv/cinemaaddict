@@ -11,7 +11,7 @@ export default class AbstractStatefulView extends AbstractView {
    * Метод для обновления состояния и перерисовки элемента
    * @param {Object} update Объект с обновлённой частью состояния
    */
-  updateElement = (update) => {
+  updateElement(update) {
     if (!update) {
       return;
     }
@@ -20,7 +20,7 @@ export default class AbstractStatefulView extends AbstractView {
 
     // TODO: позиция скролла не должна изменяться
     this.#rerenderElement();
-  };
+  }
 
   /**
    * Метод для восстановления обработчиков после перерисовки элемента

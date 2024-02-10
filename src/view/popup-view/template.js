@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import {formatMinutes} from '../../utils.js';
+import {formatMinutes} from '../../utils/common.js';
 import {EMOTIONS} from '../../data/constants.js';
+import he from 'he';
 
 export const CLOSE_BUTTON_CLASS_NAME = 'film-details__close-btn';
 
@@ -9,6 +10,8 @@ export const ADD_TO_WATCHLIST_CLASS_NAME = 'film-details__control-button--watchl
 export const ALREADY_WATCHED_CLASS_NAME = 'film-details__control-button--watched';
 
 export const ADD_TO_FAVORITES_CLASS_NAME = 'film-details__control-button--favorite';
+
+export const DELETE_BUTTON_CLASS_NAME = 'film-details__comment-delete';
 
 export const COMMENT_INPUT_CLASS_NAME = 'film-details__comment-input';
 
@@ -145,21 +148,22 @@ const getControlsTemplate = ({
 };
 
 const getCommentTemplate = ({
+  id,
   author,
   comment,
   date,
   emotion,
 }) => (`
-  <li class="film-details__comment">
+  <li class="film-details__comment" data-comment-id="${id}">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
     <div>
-      <p class="film-details__comment-text">${comment}</p>
+      <p class="film-details__comment-text">${he.encode(comment)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${dayjs(date).format('YYYY/MM/DD HH:mm')}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button class="${DELETE_BUTTON_CLASS_NAME}" type="button">Delete</button>
       </p>
     </div>
   </li>
@@ -176,7 +180,11 @@ const getNewCommentBlockTemplate = ({
   emotion: currentEmotion,
 } = {}) => (`
     <div class="film-details__new-comment">
-      <div class="film-details__add-emoji-label"></div>
+      <div class="film-details__add-emoji-label">
+        ${currentEmotion ? `
+          <img src="images/emoji/${currentEmotion}.png" width="55" height="55" alt="emoji-${currentEmotion}">`
+    : ''}
+      </div>
 
       <label class="film-details__comment-label">
         <textarea
@@ -199,7 +207,7 @@ const getNewCommentBlockTemplate = ({
             ${emotion === currentEmotion ? 'checked' : ''}
           >
           <label class="film-details__emoji-label" for="emoji-${emotion}">
-            <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
+            <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji-${currentEmotion}">
           </label>
         `).join('')}
       </div>
@@ -217,7 +225,7 @@ export const getPopupTemplate = ({
 
   return (`
     <section class="film-details">
-      <form class="film-details__inner" action="" method="get">
+      <form class="film-details__inner" action="#" method="submit">
         <div class="film-details__top-container">
 
           <div class="film-details__close">

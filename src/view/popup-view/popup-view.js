@@ -4,12 +4,18 @@ import {
   ADD_TO_FAVORITES_CLASS_NAME,
   ADD_TO_WATCHLIST_CLASS_NAME,
   ALREADY_WATCHED_CLASS_NAME,
+  DELETE_BUTTON_CLASS_NAME,
   COMMENT_INPUT_CLASS_NAME,
   EMOJI_LIST_CLASS_NAME,
   getPopupTemplate,
 } from './template.js';
 
 // TODO: Повторяется код FilmCardView по навешиванию обработчиков
+
+const defaultNewCommentState = {
+  comment: null,
+  emotion: null,
+};
 
 export default class PopupView extends AbstractStatefulView {
   #textareaElement = null;
@@ -21,10 +27,7 @@ export default class PopupView extends AbstractStatefulView {
     this._setState({
       film,
       comments,
-      newComment: {
-        comment: null,
-        emotion: null,
-      },
+      newComment: defaultNewCommentState,
     });
 
     this.#setInnerHandlers();
@@ -41,12 +44,76 @@ export default class PopupView extends AbstractStatefulView {
     this.setAlreadyWatchedClick(this._callback.alreadyWatchedClick);
     this.setFavoriteClick(this._callback.favoriteClick);
     this.setClose(this._callback.close);
+    this.setCommentSubmit(this._callback.commentSubmit);
+
+    if (this._state.comments?.length) {
+      this.setCommentDelete(this._callback.commentDelete);
+    }
   };
+
+  updateElement(update, {
+    resetCommentForm = false,
+  } = {}) {
+    if (resetCommentForm) {
+      this._setState({newComment: defaultNewCommentState});
+    }
+
+    super.updateElement(update);
+  }
 
   #setInnerHandlers() {
     this.#setEmotionChange();
     this.#setCommentInput();
   }
+
+  setCommentSubmit(onSubmit) {
+    this._callback.commentSubmit = onSubmit;
+
+    document.addEventListener('keydown', this.#onCommentSubmit);
+  }
+
+  #onCommentSubmit = (evt) => {
+    const toSubmit =
+      evt.ctrlKey
+      && evt.key === 'Enter'
+      && evt.target === this.#textareaElement;
+
+    if (!toSubmit) {
+      return;
+    }
+
+    const {emotion, comment} = this._state.newComment;
+
+    if (!emotion || !comment) {
+      // TODO: заменить alert на анимацию "shake" и/или показ элемента с сообщением
+      // eslint-disable-next-line no-alert
+      alert('Choose an emotion and write your comment');
+      return;
+    }
+
+    evt.preventDefault();
+
+    this._callback.commentSubmit(this._state.newComment);
+  };
+
+  setCommentDelete(onDelete) {
+    this._callback.commentDelete = onDelete;
+
+    this.element.addEventListener('click', this.#onDeleteButtonClick);
+  }
+
+  #onDeleteButtonClick = (evt) => {
+    const deleteButton = evt.target.closest(`.${DELETE_BUTTON_CLASS_NAME}`);
+
+    if (!deleteButton) {
+      return;
+    }
+
+    const commentItem = evt.target.closest('[data-comment-id]');
+    const {commentId} = commentItem.dataset;
+
+    this._callback.commentDelete(commentId);
+  };
 
   #setCommentInput() {
     this.#textareaElement = this.element.querySelector(`.${COMMENT_INPUT_CLASS_NAME}`);
@@ -154,6 +221,7 @@ export default class PopupView extends AbstractStatefulView {
 
   #removeHandlers = () => {
     document.removeEventListener('keydown', this.#onEscKeydown);
+    document.removeEventListener('keydown', this.#onCommentSubmit);
   };
 
   removeElement() {
