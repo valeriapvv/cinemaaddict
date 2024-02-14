@@ -1,3 +1,4 @@
+import Api from './api/api.js';
 import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
 import FiltersModel from './model/filters-model.js';
@@ -11,7 +12,15 @@ import FiltersPresenter from './presenter/filters-presenter/filters-presenter.js
 const rootElement = document.body;
 const mainContainer = document.querySelector(ContainerSelector.MainScreen);
 
-const filmsModel = new FilmsModel();
+const END_POINT = 'https://17.ecmascript.htmlacademy.pro/cinemaddict';
+const AUTHORIZATION = 'Basic leralemmcinemaddict2024';
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getFilms()
+  .then(console.log);
+
+const filmsModel = new FilmsModel({api});
 const commentsModel = new CommentsModel();
 
 const filtersModel = new FiltersModel();

@@ -1,14 +1,29 @@
 import Observable from '../framework/observable.js';
-import {films} from '../mock/films.js';
 
 export default class FilmsModel extends Observable {
   #films = null;
+  #api = null;
+
+  constructor({
+    api,
+  }) {
+    super();
+    this.#api = api;
+  }
+
+  async init(event) {
+    try {
+      const films = await this.#api.getFilms();
+      this.#films = films;
+    } catch (err) {
+      this.#films = [];
+      throw new Error(err);
+    } finally {
+      this._notify(event, null);
+    }
+  }
 
   get films() {
-    if (this.#films === null) {
-      this.#films = films;
-    }
-
     return [...this.#films];
   }
 
