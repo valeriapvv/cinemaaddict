@@ -1,4 +1,5 @@
-import Observable from '../framework/observable.js';
+import Observable from '../../framework/observable.js';
+import {convertFilmToClient} from './utils.js';
 
 export default class FilmsModel extends Observable {
   #films = null;
@@ -14,12 +15,13 @@ export default class FilmsModel extends Observable {
   async init(event) {
     try {
       const films = await this.#api.getFilms();
-      this.#films = films;
+      this.#films = films.map(convertFilmToClient);
     } catch (err) {
       this.#films = [];
-      throw new Error(err);
+      throw err;
     } finally {
       this._notify(event, null);
+      console.log('Client Data', this.#films);
     }
   }
 

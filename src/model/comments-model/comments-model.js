@@ -1,4 +1,4 @@
-import {filmsComments} from '../mock/comments.js';
+import {filmsComments} from '../../mock/comments.js';
 
 export default class CommentsModel {
   #comments = null;

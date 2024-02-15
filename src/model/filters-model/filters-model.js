@@ -1,6 +1,6 @@
-import {FilterType} from '../data/constants.js';
-import Observable from '../framework/observable.js';
-import {filter} from '../utils/filter.js';
+import {FilterType} from '../../data/constants.js';
+import Observable from '../../framework/observable.js';
+import {filter} from '../../utils/filter.js';
 
 
 export default class FiltersModel extends Observable {
