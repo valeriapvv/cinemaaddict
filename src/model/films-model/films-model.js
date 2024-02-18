@@ -21,7 +21,6 @@ export default class FilmsModel extends Observable {
       throw err;
     } finally {
       this._notify(event, null);
-      console.log('Client Data', this.#films);
     }
   }
 

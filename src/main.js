@@ -18,7 +18,6 @@ const AUTHORIZATION = 'Basic leralemmcinemaddict2024';
 const api = new Api(END_POINT, AUTHORIZATION);
 
 const filmsModel = new FilmsModel({api});
-filmsModel.init(null);
 
 const commentsModel = new CommentsModel();
 

@@ -21,7 +21,6 @@ export default class FiltersPresenter {
   init() {
     this.#filmsModel.addObserver(this.#handleFilmsModelEvent);
     this.#filtersModel.addObserver(this.#handleFiltersModelEvent);
-    this.#initFilters();
   }
 
   #handleFilmsModelEvent = () => {

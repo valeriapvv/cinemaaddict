@@ -22,6 +22,7 @@ export const SortType = {
 };
 
 export const UpdateType = {
+  Init: 'init',
   ...FilmDetail,
   CommentDelete: 'commentDelete',
   CommentAdd: 'commentAdd',

@@ -35,7 +35,17 @@ export default class FilmsBlockPresenter {
     this._initFilmsBlock();
   }
 
-  #handleFilmsModelEvent = (_event, updatedFilm) => {
+  #handleFilmsModelEvent = (event, updatedFilm) => {
+    switch(event) {
+      case UpdateType.Init:
+        return;
+
+      default:
+        this.#updateFilmCard(updatedFilm);
+    }
+  };
+
+  #updateFilmCard(updatedFilm) {
     const filmCardPresenter = this.#filmPresenterMap.get(updatedFilm.id);
 
     if (!filmCardPresenter) {
@@ -43,7 +53,7 @@ export default class FilmsBlockPresenter {
     }
 
     filmCardPresenter.init(updatedFilm);
-  };
+  }
 
   _initFilmsBlock() {
     if (!this.#isFilmsBlockMounted) {
