@@ -1,3 +1,5 @@
+import {invertObjectKeys} from '../../utils/common.js';
+
 const filmKey = {
   filmInfo: 'film_info',
   userDetails: 'user_details',
@@ -18,26 +20,30 @@ const releaseKey = {
   releaseCountry: 'release_country',
 };
 
-const convertToClient = (serverData, keyMap) => {
-  const callback = (data, [clientKey, serverKey]) => {
-    data[clientKey] = serverData[serverKey];
+const convertData = (dataToConvert, keyMap) => {
+  const callback = (data, [convertedKey, keyToConvert]) => {
+    data[convertedKey] = dataToConvert[keyToConvert];
     return data;
   };
 
   const convertedPart = Object.entries(keyMap)
     .reduce(callback, {});
 
-  const clientData = {
-    ...serverData,
+  const convertedData = {
+    ...dataToConvert,
     ...convertedPart,
   };
 
-  for (const serverKey of Object.values(keyMap)) {
-    delete clientData[serverKey];
+  for (const keyToConvert of Object.values(keyMap)) {
+    delete convertedData[keyToConvert];
   }
 
-  return clientData;
+  return convertedData;
 };
+
+const convertToClient = convertData;
+
+const convertToServer = (clientData, keyMap) => convertData(clientData, invertObjectKeys(keyMap));
 
 export const convertFilmToClient = (film) => {
   const convertedFilm = convertToClient(film, filmKey);
@@ -50,11 +56,33 @@ export const convertFilmToClient = (film) => {
 
   return {
     ...convertedFilm,
+
     filmInfo: {
       ...convertedFilmInfo,
       release: convertedRelease,
     },
+
     userDetails: convertedUserDetails,
   };
+};
 
+export const convertFilmToServer = (film) => {
+  const convertedFilm = convertToServer(film, filmKey);
+
+  const convertedFilmInfo = convertToServer(convertedFilm[filmKey.filmInfo], filmInfoKey);
+
+  const convertedUserDetails = convertToServer(convertedFilm[filmKey.userDetails], userDetailsKey);
+
+  const convertedRelease = convertToServer(convertedFilmInfo.release, releaseKey);
+
+  return {
+    ...convertedFilm,
+
+    [filmKey.filmInfo]: {
+      ...convertedFilmInfo,
+      release: convertedRelease,
+    },
+
+    [filmKey.userDetails]: convertedUserDetails,
+  };
 };

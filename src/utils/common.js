@@ -13,3 +13,12 @@ export const formatMinutes = (minutes) => {
 
   return `${hours}${hoursSign} ${restMinutes}${minutesSign}`;
 };
+
+// Object
+
+export const invertObjectKeys = (object) => {
+  const entries = Object.entries(object);
+  const invertedEntries = entries.map(([key, value]) => [value, key]);
+
+  return Object.fromEntries(invertedEntries);
+};

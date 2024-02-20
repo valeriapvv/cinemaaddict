@@ -1,5 +1,5 @@
 import Observable from '../../framework/observable.js';
-import {convertFilmToClient} from './utils.js';
+import {convertFilmToClient, convertFilmToServer} from './utils.js';
 
 export default class FilmsModel extends Observable {
   #films = null;
@@ -28,9 +28,15 @@ export default class FilmsModel extends Observable {
     return [...this.#films];
   }
 
-  update(event, updatedFilm) {
+  async updateFilm(event, update) {
     const prevFilms = this.#films;
-    const index = prevFilms.findIndex(({id}) => id === updatedFilm.id);
+    const index = prevFilms.findIndex(({id}) => id === update.id);
+
+    const film = await this.#api.updateFilm(
+      convertFilmToServer(update)
+    );
+
+    const updatedFilm = convertFilmToClient(film);
 
     this.#films = [
       ...prevFilms.slice(0, index),
