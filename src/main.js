@@ -1,6 +1,7 @@
-import FilmsModel from './model/films-model.js';
-import CommentsModel from './model/comments-model.js';
-import FiltersModel from './model/filters-model.js';
+import Api from './api/api.js';
+import FilmsModel from './model/films-model/films-model.js';
+import CommentsModel from './model/comments-model/comments-model.js';
+import FiltersModel from './model/filters-model/filters-model.js';
 import HeaderPresenter from './presenter/header-presenter/header-presenter.js';
 import FilmsPresenter from './presenter/films-presenter/films-presenter.js';
 import FilmsCountPresenter from './presenter/films-count-presenter/films-count-presenter.js';
@@ -11,11 +12,16 @@ import FiltersPresenter from './presenter/filters-presenter/filters-presenter.js
 const rootElement = document.body;
 const mainContainer = document.querySelector(ContainerSelector.MainScreen);
 
-const filmsModel = new FilmsModel();
+const END_POINT = 'https://17.ecmascript.htmlacademy.pro/cinemaddict';
+const AUTHORIZATION = 'Basic leralemmcinemaddict2024';
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+const filmsModel = new FilmsModel({api});
+
 const commentsModel = new CommentsModel();
 
 const filtersModel = new FiltersModel();
-filtersModel.createFilters(filmsModel.films);
 
 const headerPresenter = new HeaderPresenter({
   parentElement: document.querySelector(ContainerSelector.Header)

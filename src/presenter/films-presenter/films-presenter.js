@@ -6,10 +6,11 @@ import MainFilmsBlockPresenter from './main-films-block-presenter.js';
 import TopRatedFilmsBlockView from '../../view/films-block-view/top-rated-films-block-view.js';
 import CommentedFilmsBlockView from '../../view/films-block-view/commented-films-block-view.js';
 import NoFilmsBlockView from '../../view/films-block-view/no-films-block-view.js';
-import {render, replace} from '../../framework/render.js';
-import {SortType} from '../../data/constants.js';
+import {remove, render, replace} from '../../framework/render.js';
+import {SortType, UpdateType} from '../../data/constants.js';
 import {sortFilms} from '../../utils/sort.js';
 import {filter} from '../../utils/filter.js';
+import LoadingView from '../../view/loading-view/loading-view.js';
 
 const MAIN_FILMS_COUNT_TO_SHOW = 5;
 const SECONDARY_FILMS_COUNT_TO_SHOW = 2;
@@ -20,6 +21,7 @@ export default class FilmsPresenter {
   #filmsModel = null;
   #filtersModel = null;
 
+  #loadingComponent = null;
   #noFilmsComponent = null;
   #filmsSectionComponent = null;
   #sortComponent = null;
@@ -43,8 +45,31 @@ export default class FilmsPresenter {
   }
 
   init() {
-    this.#initSort();
-    this.#initFilms();
+    this.#renderLoading();
+
+    this.#filmsModel.addObserver(this.#handleFilmsModelEvent);
+    this.#filmsModel.init(UpdateType.Init);
+  }
+
+  #handleFilmsModelEvent = (event) => {
+    this.#clearScreen();
+
+    switch(event) {
+      case UpdateType.Init:
+        this.#initSort();
+        this.#initFilms();
+        break;
+    }
+  };
+
+  #renderLoading() {
+    this.#loadingComponent = new LoadingView();
+    render(this.#loadingComponent, this.#parentElement);
+  }
+
+  #clearScreen() {
+    remove(this.#loadingComponent);
+    this.#loadingComponent = null;
   }
 
   #initFilms = () => {

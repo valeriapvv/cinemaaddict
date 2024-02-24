@@ -35,15 +35,25 @@ export default class FilmsBlockPresenter {
     this._initFilmsBlock();
   }
 
-  #handleFilmsModelEvent = (_event, updatedFilm) => {
-    const filmCardPresenter = this.#filmPresenterMap.get(updatedFilm.id);
+  #handleFilmsModelEvent = (event, updatedFilm) => {
+    switch(event) {
+      case UpdateType.Init:
+        return;
+
+      default:
+        this.#updateFilmCard(updatedFilm);
+    }
+  };
+
+  #updateFilmCard(film) {
+    const filmCardPresenter = this.#filmPresenterMap.get(film.id);
 
     if (!filmCardPresenter) {
       return;
     }
 
-    filmCardPresenter.init(updatedFilm);
-  };
+    filmCardPresenter.init(film);
+  }
 
   _initFilmsBlock() {
     if (!this.#isFilmsBlockMounted) {
@@ -98,7 +108,7 @@ export default class FilmsBlockPresenter {
     const {userDetails} = film;
     const {watchlist} = userDetails;
 
-    const updatedFilm = {
+    const update = {
       ...film,
       userDetails: {
         ...userDetails,
@@ -106,7 +116,7 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(UpdateType.Watchlist, updatedFilm);
+    this.#updateFilm(UpdateType.Watchlist, update);
   };
 
   #onAlreadyWatchedClick = (film) => {
@@ -114,7 +124,7 @@ export default class FilmsBlockPresenter {
     const alreadyWatched = !userDetails.alreadyWatched;
     const watchingDate = alreadyWatched ? new Date().toISOString() : null;
 
-    const updatedFilm = {
+    const update = {
       ...film,
       userDetails: {
         ...userDetails,
@@ -123,14 +133,14 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(UpdateType.History, updatedFilm);
+    this.#updateFilm(UpdateType.History, update);
   };
 
   #onFavoriteClick = (film) => {
     const {userDetails} = film;
     const {favorite} = userDetails;
 
-    const updatedFilm = {
+    const update = {
       ...film,
       userDetails: {
         ...userDetails,
@@ -138,10 +148,10 @@ export default class FilmsBlockPresenter {
       },
     };
 
-    this.#updateFilm(UpdateType.Favorites, updatedFilm);
+    this.#updateFilm(UpdateType.Favorites, update);
   };
 
-  #updateFilm(updateType, updatedFilm) {
-    this._filmsModel.update(updateType, updatedFilm);
+  #updateFilm(updateType, update) {
+    this._filmsModel.updateFilm(updateType, update);
   }
 }
