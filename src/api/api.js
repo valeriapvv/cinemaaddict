@@ -26,4 +26,14 @@ export default class Api extends ApiService {
 
     return film;
   }
+
+  async getComments(filmId) {
+    const response = await this._load({
+      url: `${ResourceRoute.Comments}/${filmId}`,
+    });
+
+    const comments = ApiService.parseResponse(response);
+
+    return comments;
+  }
 }

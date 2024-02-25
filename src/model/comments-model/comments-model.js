@@ -1,22 +1,24 @@
-import {filmsComments} from '../../mock/comments.js';
-
 export default class CommentsModel {
   #comments = null;
 
-  get comments() {
-    if (this.#comments === null) {
-      this.#comments = filmsComments;
-    }
+  #api = null;
 
+  constructor({
+    api,
+  }) {
+    this.#api = api;
+  }
+
+  async init(filmId) {
+    const comments = await this.#api.getComments(filmId);
+    this.#comments = comments;
+  }
+
+  get comments() {
     return [...this.#comments];
   }
 
-  getCommentsById(idList) {
-    const comments = this.comments;
-    return idList.map((id) => comments.find((comment) => comment.id === id));
-  }
-
-  delete(commentId) {
+  async delete(commentId) {
     const comments = this.comments;
     const index = comments.findIndex((({id}) => id === commentId));
 

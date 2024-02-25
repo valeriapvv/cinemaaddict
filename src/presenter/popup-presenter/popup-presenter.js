@@ -33,22 +33,27 @@ export default class PopupPresenter {
     this.#filmsModel = filmsModel;
   }
 
-  init(film) {
+  async init(film) {
     if (this.#isSameFilm(film)) {
       return;
     }
 
     this.#film = film;
 
-    this.#onShowPopup();
+    await this.#loadComments(film.id);
 
     this.#renderPopup();
+
+    this.#onShowPopup();
+  }
+
+  async #loadComments(filmId) {
+    await this.#commentsModel.init(filmId);
+    this.#comments = this.#commentsModel.comments;
   }
 
   #renderPopup() {
     const prevComponent = this.#popupComponent;
-
-    this.#comments = this.#getComments(this.#film);
 
     this.#popupComponent = new PopupView(this.#film, this.#comments);
     this.#setEventHandlers();

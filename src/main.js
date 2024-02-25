@@ -19,7 +19,7 @@ const api = new Api(END_POINT, AUTHORIZATION);
 
 const filmsModel = new FilmsModel({api});
 
-const commentsModel = new CommentsModel();
+const commentsModel = new CommentsModel({api});
 
 const filtersModel = new FiltersModel();
 
