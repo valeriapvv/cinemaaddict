@@ -36,4 +36,11 @@ export default class Api extends ApiService {
 
     return comments;
   }
+
+  async deleteComment(commentId) {
+    await this._load({
+      url: `${ResourceRoute.Comments}/${commentId}`,
+      method: Method.Delete,
+    });
+  }
 }

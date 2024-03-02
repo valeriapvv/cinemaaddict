@@ -110,17 +110,14 @@ export default class PopupPresenter {
     this.#popupComponent.setCommentSubmit(this.#onCommentSubmit);
   }
 
-  #onCommentDelete = (commentId) => {
-    this.#commentsModel.delete(commentId);
+  #onCommentDelete = async (commentId) => {
+    await this.#commentsModel.delete(commentId);
 
-    const comments = this.#film
-      .comments
-      .filter(((id) => id !== commentId));
-
-    this.#filmsModel.update(UpdateType.CommentDelete, {
-      ...this.#film,
-      comments,
-    });
+    this.#filmsModel.updateComments(
+      UpdateType.CommentDelete,
+      this.#film.id,
+      this.#commentsModel.comments,
+    );
   };
 
   #onCommentSubmit = (newComment) => {
@@ -156,7 +153,7 @@ export default class PopupPresenter {
       return;
     }
 
-    const comments = this.#getComments(film);
+    const comments = this.#commentsModel.comments;
 
     this.#popupComponent.updateElement({film, comments}, options);
 
@@ -178,9 +175,5 @@ export default class PopupPresenter {
 
   #isSameFilm(film) {
     return this.#film?.id === film.id;
-  }
-
-  #getComments(film) {
-    return this.#commentsModel.getCommentsById(film.comments);
   }
 }

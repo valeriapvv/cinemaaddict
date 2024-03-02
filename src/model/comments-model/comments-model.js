@@ -19,6 +19,8 @@ export default class CommentsModel {
   }
 
   async delete(commentId) {
+    await this.#api.deleteComment(commentId);
+
     const comments = this.comments;
     const index = comments.findIndex((({id}) => id === commentId));
 
