@@ -18,8 +18,8 @@ export default class Api extends ApiService {
     const response = await this._load({
       url: `${ResourceRoute.Films}/${id}`,
       method: Method.Put,
-      body: JSON.stringify(update),
       headers: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify(update),
     });
 
     const film = ApiService.parseResponse(response);
@@ -42,5 +42,18 @@ export default class Api extends ApiService {
       url: `${ResourceRoute.Comments}/${commentId}`,
       method: Method.Delete,
     });
+  }
+
+  async submitComment(filmId, comment) {
+    const response = await this._load({
+      url: `${ResourceRoute.Comments}/${filmId}`,
+      method: Method.Post,
+      headers: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify(comment),
+    });
+
+    const data = ApiService.parseResponse(response);
+
+    return data;
   }
 }

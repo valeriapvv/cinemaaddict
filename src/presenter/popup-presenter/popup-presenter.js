@@ -1,6 +1,5 @@
 import PopupView from '../../view/popup-view/popup-view.js';
 import {remove, render, replace} from '../../framework/render.js';
-import {faker} from '@faker-js/faker';
 import {UpdateType} from '../../data/constants.js';
 
 export default class PopupPresenter {
@@ -111,36 +110,25 @@ export default class PopupPresenter {
   }
 
   #onCommentDelete = async (commentId) => {
-    await this.#commentsModel.delete(commentId);
+    const comments = await this.#commentsModel.delete(commentId);
 
     this.#filmsModel.updateComments(
       UpdateType.CommentDelete,
       this.#film.id,
-      this.#commentsModel.comments,
+      comments,
     );
   };
 
-  #onCommentSubmit = (newComment) => {
-    const newCommentId = faker.string.nanoid();
+  #onCommentSubmit = async (newComment) => {
+    const filmId = this.#film.id;
 
-    this.#commentsModel.add({
-      ...newComment,
+    const comments = await this.#commentsModel.add(filmId, newComment);
 
-      // TODO: Убрать добавление полей:
-      id: newCommentId,
-      author: 'John Doe',
-      date: new Date().toISOString(),
-    });
-
-    const comments = [
-      ...this.#film.comments,
-      newCommentId,
-    ];
-
-    this.#filmsModel.update(UpdateType.CommentAdd, {
-      ...this.#film,
+    this.#filmsModel.updateComments(
+      UpdateType.CommentAdd,
+      filmId,
       comments,
-    });
+    );
   };
 
   update(film, options) {

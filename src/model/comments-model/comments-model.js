@@ -28,12 +28,15 @@ export default class CommentsModel {
       ...comments.slice(0, index),
       ...comments.slice(index + 1),
     ];
+
+    return this.comments;
   }
 
-  add(comment) {
-    this.#comments = [
-      ...this.comments,
-      comment,
-    ];
+  async add(filmId, comment) {
+    const {comments} = await this.#api.submitComment(filmId, comment);
+
+    this.#comments = comments;
+
+    return this.comments;
   }
 }
