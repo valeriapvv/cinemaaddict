@@ -49,7 +49,7 @@ export default class FilmsModel extends Observable {
 
   updateComments(event, filmId, comments) {
     const film = this.#films.find(({id}) => id === filmId);
-    film.comments = comments;
+    film.comments = comments.map(({id}) => id);
 
     this._notify(event, film);
   }
