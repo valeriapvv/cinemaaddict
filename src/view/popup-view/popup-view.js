@@ -29,6 +29,7 @@ export default class PopupView extends AbstractStatefulView {
       comments,
       newComment: defaultNewCommentState,
       deletableComments: [],
+      isFormBlocked: false,
     });
 
     this.#setInnerHandlers();
@@ -39,21 +40,28 @@ export default class PopupView extends AbstractStatefulView {
   }
 
   _restoreHandlers = () => {
-    this.#setInnerHandlers();
-
     this.setAddToWatchlistClick(this._callback.addToWatchlistClick);
     this.setAlreadyWatchedClick(this._callback.alreadyWatchedClick);
     this.setFavoriteClick(this._callback.favoriteClick);
     this.setClose(this._callback.close);
-    this.setCommentSubmit(this._callback.commentSubmit);
     this.setCommentDelete(this._callback.commentDelete);
+
+    if (!this._state.isFormBlocked) {
+      this.#setInnerHandlers();
+      this.setCommentSubmit(this._callback.commentSubmit);
+    }
   };
 
   updateElement(update, {
     resetCommentForm = false,
+    unblockForm = false,
   } = {}) {
     if (resetCommentForm) {
-      this._setState({newComment: defaultNewCommentState});
+      update.newComment = defaultNewCommentState;
+    }
+
+    if (unblockForm) {
+      update.isFormBlocked = false;
     }
 
     super.updateElement(update);
@@ -93,6 +101,12 @@ export default class PopupView extends AbstractStatefulView {
 
     this._callback.commentSubmit(this._state.newComment);
   };
+
+  blockForm() {
+    this.updateElement({
+      isFormBlocked: true,
+    });
+  }
 
   setCommentDelete(onDelete) {
     this._callback.commentDelete = onDelete;

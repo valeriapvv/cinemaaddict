@@ -192,7 +192,7 @@ const getCommentsListTemplate = (comments, deletableComments) => {
 const getNewCommentBlockTemplate = ({
   comment,
   emotion: currentEmotion,
-} = {}) => (`
+} = {}, isFormBlocked) => (`
     <div class="film-details__new-comment">
       <div class="film-details__add-emoji-label">
         ${currentEmotion ? `
@@ -205,6 +205,7 @@ const getNewCommentBlockTemplate = ({
           class="${COMMENT_INPUT_CLASS_NAME}"
           placeholder="Select reaction below and write comment here"
           name="comment"
+          ${isFormBlocked ? 'disabled' : ''}
         >${
   comment || ''
   }</textarea>
@@ -219,6 +220,7 @@ const getNewCommentBlockTemplate = ({
             id="emoji-${emotion}"
             value="${emotion}"
             ${emotion === currentEmotion ? 'checked' : ''}
+            ${isFormBlocked ? 'disabled' : ''}
           >
           <label class="film-details__emoji-label" for="emoji-${emotion}">
             <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji-${currentEmotion}">
@@ -233,6 +235,7 @@ export const getPopupTemplate = ({
   comments,
   newComment,
   deletableComments,
+  isFormBlocked,
 }) => {
   const {description} = film.filmInfo;
 
@@ -272,7 +275,7 @@ export const getPopupTemplate = ({
 
             ${getCommentsListTemplate(comments, deletableComments)}
 
-            ${getNewCommentBlockTemplate(newComment)}
+            ${getNewCommentBlockTemplate(newComment, isFormBlocked)}
           </section>
         </div>
       </form>

@@ -72,8 +72,11 @@ export default class PopupPresenter {
   }
 
   #handleFilmsModelEvent = (event, updatedFilm) => {
+    const isCommentAdd = event === UpdateType.CommentAdd;
+
     this.update(updatedFilm, {
-      resetCommentForm: event === UpdateType.CommentAdd,
+      resetCommentForm: isCommentAdd,
+      unblockForm: isCommentAdd,
     });
   };
 
@@ -120,8 +123,9 @@ export default class PopupPresenter {
   };
 
   #onCommentSubmit = async (newComment) => {
-    const filmId = this.#film.id;
+    this.#popupComponent.blockForm();
 
+    const filmId = this.#film.id;
     const comments = await this.#commentsModel.add(filmId, newComment);
 
     this.#filmsModel.updateComments(
