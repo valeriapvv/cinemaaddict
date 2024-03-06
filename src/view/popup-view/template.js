@@ -153,6 +153,7 @@ const getCommentTemplate = ({
   comment,
   date,
   emotion,
+  isDeletable,
 }) => (`
   <li class="film-details__comment" data-comment-id="${id}">
     <span class="film-details__comment-emoji">
@@ -163,17 +164,30 @@ const getCommentTemplate = ({
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${dayjs(date).format('YYYY/MM/DD HH:mm')}</span>
-        <button class="${DELETE_BUTTON_CLASS_NAME}" type="button">Delete</button>
+
+        <button
+          class="${DELETE_BUTTON_CLASS_NAME}"
+          type="button"
+          ${isDeletable ? 'disabled' : ''}
+        >
+          ${isDeletable ? 'Deleting...' : 'Delete'}
+        </button>
       </p>
     </div>
   </li>
 `);
 
-const getCommentsListTemplate = (comments) => (`
+const getCommentsListTemplate = (comments, deletableComments) => {
+  const commentsWithDelatable = comments.map((comment) => ({
+    ...comment,
+    isDeletable: deletableComments.includes(comment.id),
+  }));
+
+  return (`
     <ul class="film-details__comments-list">
-      ${comments.map(getCommentTemplate).join('')}
+      ${commentsWithDelatable.map(getCommentTemplate).join('')}
     </ul>
-  `);
+  `);};
 
 const getNewCommentBlockTemplate = ({
   comment,
@@ -218,6 +232,7 @@ export const getPopupTemplate = ({
   film,
   comments,
   newComment,
+  deletableComments,
 }) => {
   const {description} = film.filmInfo;
 
@@ -255,7 +270,7 @@ export const getPopupTemplate = ({
               Comments <span class="film-details__comments-count">${commentsCount}</span>
             </h3>
 
-            ${getCommentsListTemplate(comments)}
+            ${getCommentsListTemplate(comments, deletableComments)}
 
             ${getNewCommentBlockTemplate(newComment)}
           </section>

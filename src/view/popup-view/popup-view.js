@@ -28,6 +28,7 @@ export default class PopupView extends AbstractStatefulView {
       film,
       comments,
       newComment: defaultNewCommentState,
+      deletableComments: [],
     });
 
     this.#setInnerHandlers();
@@ -102,7 +103,7 @@ export default class PopupView extends AbstractStatefulView {
     this.element.addEventListener('click', this.#onDeleteButtonClick);
   }
 
-  #onDeleteButtonClick = (evt) => {
+  #onDeleteButtonClick = async (evt) => {
     const deleteButton = evt.target.closest(`.${DELETE_BUTTON_CLASS_NAME}`);
 
     if (!deleteButton) {
@@ -112,8 +113,31 @@ export default class PopupView extends AbstractStatefulView {
     const commentItem = evt.target.closest('[data-comment-id]');
     const {commentId} = commentItem.dataset;
 
-    this._callback.commentDelete(commentId);
+    const {deletableComments} = this._state;
+
+    this.updateElement({
+      deletableComments: [
+        ...deletableComments,
+        commentId,
+      ]
+    });
+
+    await this._callback.commentDelete(commentId);
+
+    this.#deleteCommentId(commentId);
   };
+
+  #deleteCommentId(commentId) {
+    const {deletableComments} = this._state;
+    const index = deletableComments.findIndex((id) => id === commentId);
+
+    this._setState({
+      deletableComments: [
+        ...deletableComments.slice(0, index),
+        ...deletableComments.slice(index + 1),
+      ]
+    });
+  }
 
   #setCommentInput() {
     this.#textareaElement = this.element.querySelector(`.${COMMENT_INPUT_CLASS_NAME}`);

@@ -13,7 +13,7 @@ const rootElement = document.body;
 const mainContainer = document.querySelector(ContainerSelector.MainScreen);
 
 const END_POINT = 'https://17.ecmascript.htmlacademy.pro/cinemaddict';
-const AUTHORIZATION = 'Basic leralemmcinemaddict2024$';
+const AUTHORIZATION = 'Basic leralemmcinemaddict2024$1';
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
