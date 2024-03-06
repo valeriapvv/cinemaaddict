@@ -46,10 +46,7 @@ export default class PopupView extends AbstractStatefulView {
     this.setFavoriteClick(this._callback.favoriteClick);
     this.setClose(this._callback.close);
     this.setCommentSubmit(this._callback.commentSubmit);
-
-    if (this._state.comments?.length) {
-      this.setCommentDelete(this._callback.commentDelete);
-    }
+    this.setCommentDelete(this._callback.commentDelete);
   };
 
   updateElement(update, {
@@ -99,6 +96,10 @@ export default class PopupView extends AbstractStatefulView {
 
   setCommentDelete(onDelete) {
     this._callback.commentDelete = onDelete;
+
+    if (!this._state.comments?.length) {
+      return;
+    }
 
     this.element.addEventListener('click', this.#onDeleteButtonClick);
   }

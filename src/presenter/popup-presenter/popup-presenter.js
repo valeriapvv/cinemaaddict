@@ -102,7 +102,7 @@ export default class PopupPresenter {
       this.#popupComponent.setFavoriteClick(this.#onFavoriteClick);
     }
 
-    if (this.#comments?.length) {
+    if (this.#onCommentDelete) {
       this.#popupComponent.setCommentDelete(this.#onCommentDelete);
     }
 
